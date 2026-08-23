@@ -1,0 +1,280 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
+import { regions, directoryNote } from "../data/churches.ts";
+
+const all = regions.flatMap((r, ri) =>
+  r.churches.map((c, ci) => ({ ...c, county: r.county, id: `${ri}-${ci}` }))
+);
+const counties = regions.map((r) => r.county);
+const total = all.length;
+---
+
+<Layout title="Church Directory" description={directoryNote.body} topTheme="dark">
+  <Hero
+    image="/images/about/1-16.jpg"
+    alt="Fellowship in the local church"
+    minH="min-h-[52vh]"
+    eyebrow="Church Directory"
+    title={directoryNote.heading}
+    intro={directoryNote.body}
+  />
+
+  <!-- Filter bar -->
+  <section class="border-b border-line bg-paper">
+    <div class="mx-auto max-w-7xl px-5 py-5 sm:px-8">
+      <div class="flex flex-wrap gap-2">
+        <button
+          type="button"
+          data-filter="all"
+          class="filter-chip is-active rounded-full border border-ink bg-ink px-4 py-1.5 text-sm font-medium text-paper"
+        >
+          All <span class="opacity-60">{total}</span>
+        </button>
+        {
+          regions.map((r) => (
+            <button
+              type="button"
+              data-filter={r.county}
+              class="filter-chip rounded-full border border-line px-4 py-1.5 text-sm font-medium text-ink transition-colors hover:border-ink"
+            >
+              {r.county.replace(" County", "")} <span class="text-ash">{r.churches.length}</span>
+            </button>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Map + list -->
+  <div class="mx-auto grid max-w-[110rem] lg:grid-cols-[minmax(0,460px)_1fr]">
+    <!-- Map -->
+    <div class="order-1 lg:order-2">
+      <div
+        id="map"
+        class="h-[55vh] w-full bg-bone lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)]"
+        role="application"
+        aria-label="Map of partner churches"
+      >
+      </div>
+    </div>
+
+    <!-- List -->
+    <div class="order-2 lg:order-1">
+      <ul id="church-list" class="divide-y divide-line">
+        {
+          all.map((c) => (
+            <li
+              data-id={c.id}
+              data-county={c.county}
+              class="church-item cursor-pointer px-5 py-5 transition-colors hover:bg-bone sm:px-8"
+            >
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <h3 class="font-display text-lg font-semibold leading-tight tracking-tight">{c.name}</h3>
+                  <p class="mt-1.5 text-sm leading-relaxed text-ash">{c.address}</p>
+                  <p class="mt-1 text-sm text-ash">
+                    <span class="text-ink/60">Service:</span> {c.times}
+                  </p>
+                </div>
+                <span class="mt-1 shrink-0 text-xs uppercase tracking-wider text-ash">
+                  {c.county.replace(" County", "")}
+                </span>
+              </div>
+              {c.url && (
+                <a
+                  href={c.url}
+                  target="_blank"
+                  rel="noopener"
+                  class="visit-link mt-3 inline-block text-sm font-medium underline-offset-4 hover:underline"
+                >
+                  Visit website →
+                </a>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+      <p id="empty-msg" class="hidden px-5 py-16 text-center text-ash sm:px-8">
+        No churches in this county.
+      </p>
+    </div>
+  </div>
+
+  <script type="application/json" id="church-data" set:html={JSON.stringify(all)} />
+
+  <script>
+    import L from "leaflet";
+    import "leaflet/dist/leaflet.css";
+
+    type Church = {
+      id: string;
+      name: string;
+      address: string;
+      times: string;
+      url: string;
+      lat: number;
+      lng: number;
+      county: string;
+    };
+
+    const data: Church[] = JSON.parse(
+      document.getElementById("church-data")!.textContent || "[]"
+    );
+
+    const map = L.map("map", { scrollWheelZoom: false, zoomControl: true });
+    L.tileLayer(
+      "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+      {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: "abcd",
+        maxZoom: 19,
+      }
+    ).addTo(map);
+
+    const pin = (active = false) =>
+      L.divIcon({
+        className: "kcm-pin",
+        html: `<span class="kcm-pin-dot${active ? " is-active" : ""}"></span>`,
+        iconSize: [18, 18],
+        iconAnchor: [9, 9],
+      });
+
+    const markers = new Map<string, L.Marker>();
+    let activeId: string | null = null;
+
+    const setActive = (id: string | null, fly = false) => {
+      if (activeId && markers.has(activeId)) markers.get(activeId)!.setIcon(pin(false));
+      document.querySelectorAll(".church-item.is-active").forEach((el) =>
+        el.classList.remove("is-active")
+      );
+      activeId = id;
+      if (!id) return;
+      const m = markers.get(id);
+      const item = document.querySelector<HTMLElement>(`.church-item[data-id="${id}"]`);
+      if (m) {
+        m.setIcon(pin(true));
+        m.openPopup();
+        if (fly) map.flyTo(m.getLatLng(), Math.max(map.getZoom(), 13), { duration: 0.6 });
+      }
+      if (item) {
+        item.classList.add("is-active");
+        item.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    };
+
+    data.forEach((c) => {
+      if (c.lat == null || c.lng == null) return;
+      const m = L.marker([c.lat, c.lng], { icon: pin() }).addTo(map);
+      const popup = `
+        <div class="kcm-popup">
+          <strong>${c.name}</strong>
+          <span>${c.address}</span>
+          <span class="times">Service: ${c.times}</span>
+          ${c.url ? `<a href="${c.url}" target="_blank" rel="noopener">Visit website →</a>` : ""}
+        </div>`;
+      m.bindPopup(popup, { closeButton: true });
+      m.on("click", () => setActive(c.id, false));
+      markers.set(c.id, m);
+    });
+
+    // List → map
+    document.querySelectorAll<HTMLElement>(".church-item").forEach((item) => {
+      item.addEventListener("click", (e) => {
+        if ((e.target as HTMLElement).closest(".visit-link")) return; // let links work
+        setActive(item.dataset.id!, true);
+      });
+    });
+
+    // Fit map to a set of churches
+    const fit = (list: Church[]) => {
+      const pts = list
+        .filter((c) => c.lat != null && c.lng != null)
+        .map((c) => [c.lat, c.lng] as [number, number]);
+      if (pts.length) map.fitBounds(pts, { padding: [50, 50], maxZoom: 12 });
+    };
+
+    // Filtering
+    const chips = document.querySelectorAll<HTMLElement>(".filter-chip");
+    const items = document.querySelectorAll<HTMLElement>(".church-item");
+    const emptyMsg = document.getElementById("empty-msg")!;
+
+    const applyFilter = (county: string) => {
+      const subset = county === "all" ? data : data.filter((c) => c.county === county);
+      const keep = new Set(subset.map((c) => c.id));
+      items.forEach((it) =>
+        it.classList.toggle("hidden", county !== "all" && !keep.has(it.dataset.id!))
+      );
+      markers.forEach((m, id) => {
+        if (county === "all" || keep.has(id)) m.addTo(map);
+        else map.removeLayer(m);
+      });
+      emptyMsg.classList.toggle("hidden", subset.length > 0);
+      chips.forEach((ch) => {
+        const on = ch.dataset.filter === county;
+        ch.classList.toggle("is-active", on);
+        ch.classList.toggle("bg-ink", on);
+        ch.classList.toggle("text-paper", on);
+        ch.classList.toggle("border-ink", on);
+        ch.classList.toggle("border-line", !on);
+      });
+      setActive(null);
+      fit(subset);
+    };
+
+    chips.forEach((ch) =>
+      ch.addEventListener("click", () => applyFilter(ch.dataset.filter!))
+    );
+
+    // Initial view
+    fit(data);
+    // Recalculate size once laid out (sticky/grid can mis-measure on first paint)
+    setTimeout(() => map.invalidateSize(), 200);
+    window.addEventListener("resize", () => map.invalidateSize());
+  </script>
+
+  <style is:global>
+    .kcm-pin-dot {
+      display: block;
+      width: 14px;
+      height: 14px;
+      border-radius: 9999px;
+      background: var(--color-ink, #0a0a0a);
+      border: 2px solid #fff;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+      transition: transform 0.15s ease;
+    }
+    .kcm-pin-dot.is-active {
+      transform: scale(1.6);
+      background: #c0392b;
+    }
+    .church-item.is-active {
+      background: var(--color-bone, #f4f3f1);
+      box-shadow: inset 3px 0 0 var(--color-ink, #0a0a0a);
+    }
+    .leaflet-popup-content-wrapper {
+      border-radius: 12px;
+    }
+    .kcm-popup {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      font-family: var(--font-sans, sans-serif);
+    }
+    .kcm-popup strong {
+      font-family: var(--font-display, sans-serif);
+      font-size: 1rem;
+    }
+    .kcm-popup span {
+      color: #555;
+      font-size: 0.8rem;
+    }
+    .kcm-popup a {
+      margin-top: 4px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--color-ink, #0a0a0a);
+    }
+  </style>
+</Layout>

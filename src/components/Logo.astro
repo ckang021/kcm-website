@@ -1,0 +1,23 @@
+---
+interface Props {
+  class?: string;
+  light?: boolean; // white version for dark backgrounds
+}
+const { class: className = "", light = false } = Astro.props;
+---
+
+<a
+  href="/"
+  aria-label="Kristos Campus Missions — Home"
+  class={`inline-flex items-center ${className}`}
+>
+  <span
+    class={`grid h-9 w-9 place-items-center border font-display text-sm font-bold tracking-tight transition-colors ${
+      light
+        ? "border-white text-white"
+        : "border-ink text-ink"
+    }`}
+  >
+    KCM
+  </span>
+</a>

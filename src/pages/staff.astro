@@ -1,0 +1,57 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
+import { steeringCore, staffGroups, staffPhoto } from "../data/staff.ts";
+---
+
+<Layout title="Staff" description="Meet the KCM staff — Steering Core, Campus Staff, and Federal Staff." topTheme="dark">
+  <Hero
+    image={staffPhoto}
+    alt="KCM staff in worship"
+    eyebrow="Our Team"
+    title="Meet our KCM Staff"
+    intro="KCM structures on two levels: Campus and Federal."
+  />
+
+  <!-- Structure -->
+  <section class="bg-paper py-24 sm:py-28">
+    <div class="mx-auto max-w-7xl px-5 sm:px-8">
+      <div class="grid gap-8 md:grid-cols-3">
+        {
+          staffGroups.map((s, i) => (
+            <div class="reveal rounded-2xl border border-line p-8">
+              <span class="font-display text-sm font-bold text-ash">0{i + 1}</span>
+              <h2 class="mt-4 font-display text-2xl font-bold tracking-tight">{s.title}</h2>
+              <p class="mt-3 leading-relaxed text-ash">{s.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Steering Core -->
+  <section class="border-t border-line bg-bone py-24 sm:py-28">
+    <div class="mx-auto max-w-7xl px-5 sm:px-8">
+      <p class="eyebrow reveal">Federal level</p>
+      <h2 class="reveal mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">Steering Core</h2>
+      <p class="reveal mt-4 max-w-2xl text-ash">
+        Steering Core leads all of KCM on a federal level, planning alongside campus cores and staff to mobilize
+        every federal event throughout the year.
+      </p>
+      <div class="mt-12 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:grid-cols-4">
+        {
+          steeringCore.map((m) => (
+            <div class="reveal">
+              <div class="aspect-square overflow-hidden rounded-2xl bg-bone">
+                <img src={m.photo} alt={m.name} loading="lazy" class="h-full w-full object-cover" />
+              </div>
+              <p class="mt-4 font-medium tracking-tight">{m.name}</p>
+              <p class="text-sm text-ash">{m.role}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

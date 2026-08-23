@@ -1,0 +1,151 @@
+---
+import { nav } from "../data/site.ts";
+
+interface Props {
+  /** "dark" = page opens with a dark hero, so nav sits white/transparent until scrolled. */
+  topTheme?: "light" | "dark";
+}
+const { topTheme = "light" } = Astro.props;
+
+const path = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === "/" ? path === "/" : path.startsWith(href);
+---
+
+<header
+  data-header
+  data-top-theme={topTheme}
+  class="fixed inset-x-0 top-0 z-50 transition-all duration-300"
+>
+  <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
+    <a href="/" aria-label="Kristos Campus Missions — Home" class="shrink-0">
+      <span
+        data-logo
+        class="grid h-9 w-9 place-items-center border font-display text-sm font-bold tracking-tight"
+      >
+        KCM
+      </span>
+    </a>
+
+    <!-- Desktop nav -->
+    <nav class="hidden items-center gap-7 lg:flex" aria-label="Primary">
+      {
+        nav.map((item) => (
+          <a
+            href={item.href}
+            data-nav-link
+            data-active={isActive(item.href) ? "true" : "false"}
+            class="text-sm font-medium tracking-tight transition-colors"
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="hidden lg:flex">
+      <a
+        href="/give"
+        data-give
+        class="rounded-full px-5 py-2 text-sm font-medium transition-transform hover:-translate-y-0.5"
+      >
+        Give
+      </a>
+    </div>
+
+    <!-- Mobile toggle -->
+    <button
+      type="button"
+      data-menu-toggle
+      aria-label="Open menu"
+      aria-expanded="false"
+      class="relative z-50 flex h-10 w-10 items-center justify-center lg:hidden"
+    >
+      <span class="sr-only">Toggle menu</span>
+      <svg data-burger class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5" />
+      </svg>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile menu overlay -->
+<div
+  data-menu-panel
+  class="fixed inset-0 z-40 translate-x-full bg-paper transition-transform duration-300 ease-out lg:hidden"
+>
+  <div class="flex h-full flex-col px-6 pb-10 pt-24">
+    <nav class="flex flex-col gap-1" aria-label="Mobile">
+      {
+        nav.map((item) => (
+          <a
+            href={item.href}
+            class:list={[
+              "border-b border-line py-4 font-display text-2xl tracking-tight",
+              isActive(item.href) ? "text-ink" : "text-ash",
+            ]}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+    <a
+      href="/give"
+      class="mt-8 rounded-full bg-ink px-6 py-4 text-center text-lg font-medium text-paper"
+    >
+      Give
+    </a>
+  </div>
+</div>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+  const panel = document.querySelector<HTMLElement>("[data-menu-panel]");
+  const header = document.querySelector<HTMLElement>("[data-header]");
+
+  let open = false;
+  function setMenu(next: boolean) {
+    open = next;
+    panel?.classList.toggle("translate-x-full", !open);
+    toggle?.setAttribute("aria-expanded", String(open));
+    toggle?.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    document.body.style.overflow = open ? "hidden" : "";
+  }
+  toggle?.addEventListener("click", () => setMenu(!open));
+  panel?.querySelectorAll("a").forEach((a) =>
+    a.addEventListener("click", () => setMenu(false))
+  );
+
+  const onScroll = () => {
+    if (window.scrollY > 24) header?.setAttribute("data-scrolled", "true");
+    else header?.removeAttribute("data-scrolled");
+  };
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+</script>
+
+<style>
+  /* --- Default (light) top theme: dark ink on transparent --- */
+  [data-header] [data-logo] { border-color: var(--color-ink); color: var(--color-ink); }
+  [data-header] [data-nav-link] { color: var(--color-ash); }
+  [data-header] [data-nav-link][data-active="true"] { color: var(--color-ink); }
+  [data-header] [data-nav-link]:hover { color: var(--color-ink); }
+  [data-header] [data-give] { background: var(--color-ink); color: var(--color-paper); }
+  [data-header] [data-burger] { color: var(--color-ink); }
+
+  /* --- Dark top theme (over a dark hero): white until scrolled --- */
+  [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-logo] { border-color: #fff; color: #fff; }
+  [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-nav-link] { color: rgba(255,255,255,0.7); }
+  [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-nav-link][data-active="true"],
+  [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-nav-link]:hover { color: #fff; }
+  [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-give] { background: #fff; color: var(--color-ink); }
+  [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-burger] { color: #fff; }
+
+  /* --- Scrolled: frosted paper bar --- */
+  [data-header][data-scrolled] {
+    background-color: color-mix(in srgb, var(--color-paper) 88%, transparent);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-line);
+  }
+</style>

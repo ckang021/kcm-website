@@ -1,0 +1,62 @@
+---
+import { nav, site } from "../data/site.ts";
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-line bg-bone">
+  <div class="mx-auto max-w-7xl px-5 py-16 sm:px-8">
+    <div class="flex flex-col gap-12 md:flex-row md:items-start md:justify-between">
+      <div class="max-w-sm">
+        <span class="grid h-11 w-11 place-items-center border border-ink font-display text-base font-bold tracking-tight">
+          KCM
+        </span>
+        <p class="mt-5 text-sm leading-relaxed text-ash">
+          {site.description}
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-10 sm:grid-cols-3">
+        <nav aria-label="Footer">
+          <p class="eyebrow mb-4">Explore</p>
+          <ul class="space-y-2.5">
+            {
+              nav.map((item) => (
+                <li>
+                  <a href={item.href} class="text-sm text-ink/80 transition-colors hover:text-ink">
+                    {item.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+
+        <div>
+          <p class="eyebrow mb-4">Get Involved</p>
+          <ul class="space-y-2.5">
+            <li><a href="/give" class="text-sm text-ink/80 transition-colors hover:text-ink">Give</a></li>
+            <li><a href="/missions" class="text-sm text-ink/80 transition-colors hover:text-ink">Missions</a></li>
+            <li><a href="/campuses" class="text-sm text-ink/80 transition-colors hover:text-ink">Find a Campus</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <p class="eyebrow mb-4">Connect</p>
+          <ul class="space-y-2.5">
+            <li>
+              <a href={site.social.instagram} target="_blank" rel="noopener" class="text-sm text-ink/80 transition-colors hover:text-ink">Instagram</a>
+            </li>
+            <li>
+              <a href={site.social.facebook} target="_blank" rel="noopener" class="text-sm text-ink/80 transition-colors hover:text-ink">Facebook</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-14 flex flex-col gap-2 border-t border-line pt-6 text-xs text-ash sm:flex-row sm:items-center sm:justify-between">
+      <p>&copy; {year} Kristos Campus Missions. All rights reserved.</p>
+      <p>Santa Barbara → San Diego · Southern California</p>
+    </div>
+  </div>
+</footer>
