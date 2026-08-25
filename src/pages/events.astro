@@ -76,7 +76,7 @@ import { events, CATEGORIES } from "../data/events.ts";
 
   <!-- event detail modal -->
   <div data-ev-modal class="fixed inset-0 z-[60] hidden items-center justify-center bg-ink/70 p-5 backdrop-blur-sm">
-    <div class="relative w-full max-w-md rounded-2xl bg-paper p-7 shadow-2xl">
+    <div data-ev-panel class="relative w-full max-w-md rounded-2xl bg-paper p-7 shadow-2xl">
       <button data-ev-close aria-label="Close" class="absolute right-4 top-4 text-2xl leading-none text-ash hover:text-ink">&times;</button>
       <p data-ev-cat class="eyebrow"></p>
       <h3 data-ev-title class="mt-3 font-display text-2xl font-bold tracking-tight"></h3>
@@ -91,6 +91,21 @@ import { events, CATEGORIES } from "../data/events.ts";
       </a>
     </div>
   </div>
+
+  <style>
+    /* modal open/close animation: backdrop fades, panel scales up */
+    [data-ev-modal] { opacity: 0; transition: opacity 0.22s ease; }
+    [data-ev-modal].is-open { opacity: 1; }
+    [data-ev-panel] {
+      opacity: 0;
+      transform: translateY(14px) scale(0.97);
+      transition: opacity 0.24s ease, transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    [data-ev-modal].is-open [data-ev-panel] { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      [data-ev-modal], [data-ev-panel] { transition: none; }
+    }
+  </style>
 
   <script
     type="application/json"
@@ -166,11 +181,26 @@ import { events, CATEGORIES } from "../data/events.ts";
       modal.classList.remove("hidden");
       modal.classList.add("flex");
       document.body.style.overflow = "hidden";
+      // next frame so the transition runs from the closed state
+      requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add("is-open")));
     };
     const closeModal = () => {
-      modal.classList.add("hidden");
-      modal.classList.remove("flex");
       document.body.style.overflow = "";
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (!modal.classList.contains("is-open") || reduce) {
+        modal.classList.remove("is-open");
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+        return;
+      }
+      modal.classList.remove("is-open");
+      const done = (e: TransitionEvent) => {
+        if (e.target !== modal) return; // ignore the panel's own transition
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+        modal.removeEventListener("transitionend", done as EventListener);
+      };
+      modal.addEventListener("transitionend", done as EventListener);
     };
     modal.addEventListener("click", (e) => {
       const t = e.target as HTMLElement;
