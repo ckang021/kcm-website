@@ -73,7 +73,7 @@ const levels = [
                   <p class="font-display text-lg font-bold tracking-tight">{lvl.name}</p>
                   <p class="mt-1 text-sm text-white/60">{lvl.note}</p>
                 </div>
-                <div class="mt-6 space-y-4">
+                <div class="mt-7 space-y-4">
                   {lvl.groups.map((g) => {
                     const Tag = g.href ? "a" : "div";
                     return (
@@ -162,40 +162,55 @@ const levels = [
       letter-spacing: -0.01em;
     }
     .org-trunk {
-      width: 1px;
-      height: 2.75rem;
-      margin: 0 auto;
-      background: var(--color-line);
+      display: none;
     }
     .org-level {
       border-left: 2px solid var(--color-ink);
       padding-left: 1rem;
     }
-    /* connector lines only on the two-column layout */
+    /* Tree connectors only on the two-column (sm+) layout. Each column draws
+       its own drop (at its true centre) plus a half-bar reaching to the page
+       centre, so they meet regardless of the grid gap. */
     @media (min-width: 640px) {
+      .org-trunk {
+        display: block;
+        width: 1px;
+        height: 2rem;
+        margin: 0 auto;
+        background: var(--color-line);
+      }
       .org-levels {
         position: relative;
-      }
-      .org-levels::before {
-        content: "";
-        position: absolute;
-        top: -2.75rem;
-        left: 25%;
-        right: 25%;
-        height: 1px;
-        background: var(--color-line);
-      }
-      .org-col::before {
-        content: "";
-        position: absolute;
-        top: -2.75rem;
-        left: 50%;
-        width: 1px;
-        height: 2.75rem;
-        background: var(--color-line);
+        padding-top: 2.25rem; /* room for the bar + drops above the columns */
       }
       .org-col {
         position: relative;
+      }
+      /* vertical drop into each column, at the column's own centre */
+      .org-col::before {
+        content: "";
+        position: absolute;
+        top: -2.25rem;
+        left: 50%;
+        width: 1px;
+        height: 2.25rem;
+        background: var(--color-line);
+      }
+      /* horizontal half-bar from each column centre toward the page centre */
+      .org-col::after {
+        content: "";
+        position: absolute;
+        top: -2.25rem;
+        height: 1px;
+        background: var(--color-line);
+      }
+      .org-col:first-child::after {
+        left: 50%;
+        right: -1.25rem; /* half of the 2.5rem grid gap → meets at page centre */
+      }
+      .org-col:last-child::after {
+        left: -1.25rem;
+        right: 50%;
       }
     }
 
@@ -217,8 +232,8 @@ const levels = [
       color: var(--color-ink);
     }
     @media (min-width: 640px) {
-      .fade-dark .org-levels::before,
-      .fade-dark .org-col::before {
+      .fade-dark .org-col::before,
+      .fade-dark .org-col::after {
         background: rgba(255, 255, 255, 0.22);
       }
     }
