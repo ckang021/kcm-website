@@ -1,8 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Logo from "../components/Logo.astro";
+import Socials from "../components/Socials.astro";
 import { site, resources } from "../data/site.ts";
 import { campuses } from "../data/campuses.ts";
-import { teams } from "../data/missions.ts";
 
 const gallery = Array.from({ length: 12 }, (_, i) =>
   i === 0 ? "/images/home/image-asset.jpg" : `/images/home/image-asset-${i + 1}.jpg`
@@ -32,8 +33,8 @@ const gallery = Array.from({ length: 12 }, (_, i) =>
     >
     </div>
     <div class="relative mx-auto w-full max-w-7xl px-5 pb-24 pt-40 sm:px-8 sm:pb-32">
-      <p class="eyebrow text-white/70">Kristos Campus Missions</p>
-      <h1 class="mt-5 max-w-4xl font-display text-4xl font-bold leading-[1.04] tracking-tight text-white sm:text-6xl lg:text-7xl">
+      <Logo class="h-16 text-white sm:h-20" link={false} />
+      <h1 class="mt-8 max-w-4xl font-display text-4xl font-bold leading-[1.04] tracking-tight text-white sm:text-6xl lg:text-7xl">
         Discipling collegians for the mission of God.
       </h1>
       <p class="mt-6 max-w-xl text-lg text-white/80">{site.mission}</p>
@@ -215,37 +216,6 @@ const gallery = Array.from({ length: 12 }, (_, i) =>
     </div>
   </section>
 
-  <!-- MISSIONS TEASER -->
-  <section class="relative overflow-hidden border-b border-line bg-ink py-24 text-paper sm:py-28">
-    <div class="mx-auto max-w-7xl px-5 sm:px-8">
-      <div class="grid gap-10 lg:grid-cols-2 lg:items-center">
-        <div>
-          <p class="eyebrow text-white/50 reveal">STSM 2025 · #go</p>
-          <h2 class="reveal mt-3 max-w-md font-display text-3xl font-bold leading-tight tracking-tight sm:text-5xl">
-            Sending students to the ends of the earth.
-          </h2>
-          <p class="reveal mt-6 max-w-md text-white/70">
-            Every year KCM sends teams around the world to support missionaries and partake in the Great Commission.
-          </p>
-          <a href="/missions" class="reveal mt-8 inline-block rounded-full bg-white px-6 py-3 text-sm font-medium text-ink transition-transform hover:-translate-y-0.5">
-            See our teams
-          </a>
-        </div>
-        <div class="grid grid-cols-3 gap-3">
-          {
-            teams.map((t) => (
-              <a href={`/missions#${t.slug}`} class="group relative aspect-[3/4] overflow-hidden rounded-lg">
-                <img src={t.cover} alt={t.country} loading="lazy" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                <div class="absolute inset-0 bg-gradient-to-t from-ink/80 to-transparent"></div>
-                <span class="absolute bottom-2 left-2.5 text-xs font-medium tracking-tight text-white">{t.country}</span>
-              </a>
-            ))
-          }
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- RESOURCES / APPS -->
   <section class="border-b border-line bg-bone py-20">
     <div class="mx-auto max-w-7xl px-5 sm:px-8">
@@ -278,10 +248,8 @@ const gallery = Array.from({ length: 12 }, (_, i) =>
         Check us out on Instagram
       </h2>
       <p class="reveal mt-3 text-ash">Follow {site.social.instagramHandle} for the latest from KCM.</p>
-      <div class="reveal mt-8 flex flex-wrap justify-center gap-3">
-        <a href={site.social.instagram} target="_blank" rel="noopener" class="rounded-full bg-ink px-6 py-3 text-sm font-medium text-paper transition-transform hover:-translate-y-0.5">
-          @kcm.network
-        </a>
+      <div class="reveal mt-8 flex flex-wrap items-center justify-center gap-4">
+        <Socials class="h-12 w-12" variant="solid" />
         <a href="/give" class="rounded-full border border-line px-6 py-3 text-sm font-medium text-ink transition-colors hover:border-ink">
           Support KCM
         </a>

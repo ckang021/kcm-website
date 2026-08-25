@@ -1,23 +1,34 @@
 ---
+/**
+ * Official KCM mark, traced from the brand PNG to a single inline SVG.
+ * Uses `currentColor`, so text color controls it (black on light, white on dark).
+ */
 interface Props {
+  /** Height utility class for the mark, e.g. "h-9". Width follows the aspect ratio. */
   class?: string;
-  light?: boolean; // white version for dark backgrounds
+  /** Wrap in a link home (default). Set false for standalone/decorative use. */
+  link?: boolean;
 }
-const { class: className = "", light = false } = Astro.props;
+const { class: className = "h-9", link = true } = Astro.props;
+
+const Wrapper = link ? "a" : "span";
+const wrapperProps = link
+  ? { href: "/", "aria-label": "Kristos Campus Missions — Home" }
+  : {};
 ---
 
-<a
-  href="/"
-  aria-label="Kristos Campus Missions — Home"
-  class={`inline-flex items-center ${className}`}
->
-  <span
-    class={`grid h-9 w-9 place-items-center border font-display text-sm font-bold tracking-tight transition-colors ${
-      light
-        ? "border-white text-white"
-        : "border-ink text-ink"
-    }`}
+<Wrapper {...wrapperProps} class="inline-flex items-center">
+  <svg
+    viewBox="0 0 1500 1436"
+    class:list={["w-auto", className]}
+    role="img"
+    aria-label="KCM"
+    fill="currentColor"
   >
-    KCM
-  </span>
-</a>
+    <g transform="translate(0,1436) scale(0.1,-0.1)" stroke="none">
+      <path
+        d="M1110 9335 l0 -4115 330 0 330 0 0 511 0 510 233 256 c127 141 277 307 332 369 55 62 105 113 110 113 6 1 40 -38 75 -86 36 -49 182 -245 325 -438 263 -353 523 -702 780 -1047 l140 -188 408 0 c324 0 407 3 401 13 -8 11 -530 738 -714 992 -134 185 -830 1152 -884 1228 l-48 67 183 203 c101 111 446 491 767 845 321 354 586 650 589 658 4 12 -51 14 -389 14 l-394 0 -105 -113 c-96 -104 -1689 -1832 -1772 -1922 l-36 -40 -1 2803 0 2802 5743 -2 5742 -3 3 -1283 2 -1282 313 2 312 3 0 1620 0 1620 -6387 3 -6388 2 0 -4115z M6905 9243 c-99 -12 -243 -38 -325 -58 -709 -177 -1263 -690 -1467 -1360 -115 -378 -114 -820 3 -1203 204 -668 748 -1182 1441 -1362 156 -41 386 -70 547 -70 533 0 1089 222 1506 603 l64 57 -35 38 c-20 20 -111 121 -203 224 l-167 187 -87 -73 c-324 -273 -744 -424 -1112 -400 -530 34 -973 322 -1204 782 -92 183 -135 357 -143 578 -6 165 3 258 42 409 136 534 579 938 1133 1031 133 23 358 23 485 0 300 -54 594 -208 828 -434 l56 -54 60 74 c33 40 115 143 183 228 68 85 130 163 138 173 14 16 13 20 -14 48 -50 53 -171 148 -287 226 -269 181 -626 311 -967 353 -78 9 -406 12 -475 3z M9647 9233 c-4 -3 -7 -908 -7 -2010 l0 -2003 320 0 320 0 1 1493 0 1492 89 -180 c49 -99 157 -317 239 -485 353 -718 603 -1227 763 -1552 l172 -348 223 0 224 0 156 318 c85 174 208 425 273 557 169 344 449 914 651 1324 l174 354 5 -399 c3 -219 7 -1741 9 -3381 l3 -2983 -5761 0 -5761 0 0 1440 0 1440 -315 0 -315 0 0 -1755 0 -1755 6384 0 6384 0 7 143 c3 78 5 1976 3 4217 l-3 4075 -398 3 -398 2 -293 -592 c-162 -326 -443 -894 -625 -1263 -183 -368 -346 -700 -363 -737 -18 -38 -34 -68 -37 -68 -3 0 -225 442 -494 983 -268 540 -565 1137 -660 1327 l-172 345 -396 3 c-217 1 -398 -1 -402 -5z"
+      ></path>
+    </g>
+  </svg>
+</Wrapper>

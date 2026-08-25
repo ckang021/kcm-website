@@ -50,8 +50,16 @@ import { site, about } from "../data/site.ts";
       <h2 class="max-w-md font-display text-2xl font-bold tracking-tight sm:text-3xl">
         We're spread across 8 SoCal campuses.
       </h2>
-      <a href="/campuses" class="rounded-full bg-white px-6 py-3 text-sm font-medium text-ink transition-transform hover:-translate-y-0.5">
-        Check out our campuses →
+      <a
+        href="/campuses"
+        class="group relative inline-flex shrink-0 items-center gap-2 overflow-hidden rounded-full bg-white px-6 py-3 text-sm font-medium text-ink ring-1 ring-white/70 transition-colors duration-300 hover:text-white"
+      >
+        <span
+          class="absolute inset-0 -translate-x-full bg-ink transition-transform duration-300 ease-out group-hover:translate-x-0"
+          aria-hidden="true"
+        ></span>
+        <span class="relative z-10">Check out our campuses</span>
+        <span class="relative z-10 transition-transform duration-300 group-hover:translate-x-1">→</span>
       </a>
     </div>
   </section>

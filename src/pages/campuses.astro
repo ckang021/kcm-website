@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Hero from "../components/Hero.astro";
+import Socials from "../components/Socials.astro";
 import { campuses } from "../data/campuses.ts";
 ---
 
@@ -12,16 +13,27 @@ import { campuses } from "../data/campuses.ts";
     title="KCM exists on 8 college campuses across Southern California."
   />
 
-  <!-- Quick index -->
-  <section class="sticky top-0 z-30 border-b border-line bg-paper/90 backdrop-blur">
-    <div class="mx-auto flex max-w-7xl gap-x-6 gap-y-2 overflow-x-auto px-5 py-3 sm:px-8">
-      {
-        campuses.map((c) => (
-          <a href={`#${c.slug}`} class="whitespace-nowrap text-sm font-medium text-ash transition-colors hover:text-ink">
-            {c.name}
-          </a>
-        ))
-      }
+  <!-- Sticky campus tabs with scroll-spy indicator -->
+  <section data-tabs class="sticky top-0 z-30 border-b border-line bg-paper/90 backdrop-blur">
+    <div class="mx-auto max-w-7xl px-5 sm:px-8">
+      <div data-tabs-track class="relative flex gap-x-7 overflow-x-auto py-3.5">
+        {
+          campuses.map((c) => (
+            <a
+              href={`#${c.slug}`}
+              data-tab={c.slug}
+              class="whitespace-nowrap text-sm font-medium text-ash transition-colors hover:text-ink"
+            >
+              {c.name}
+            </a>
+          ))
+        }
+        <!-- sliding underline -->
+        <span
+          data-tabs-indicator
+          class="pointer-events-none absolute bottom-0 left-0 h-0.5 w-0 rounded-full bg-ink opacity-0 transition-all duration-300 ease-out"
+        ></span>
+      </div>
     </div>
   </section>
 
@@ -34,15 +46,8 @@ import { campuses } from "../data/campuses.ts";
               <p class="eyebrow">{c.city}</p>
               <h2 class="mt-3 font-display text-4xl font-bold tracking-tight sm:text-5xl">{c.name}</h2>
               <p class="mt-2 text-ash">{c.full}</p>
-              <div class="mt-5 flex gap-3">
-                <a href={c.instagram} target="_blank" rel="noopener" class="rounded-full border border-line px-4 py-2 text-sm font-medium transition-colors hover:border-ink">
-                  Instagram
-                </a>
-                {c.facebook && (
-                  <a href={c.facebook} target="_blank" rel="noopener" class="rounded-full border border-line px-4 py-2 text-sm font-medium transition-colors hover:border-ink">
-                    Facebook
-                  </a>
-                )}
+              <div class="mt-5">
+                <Socials class="h-10 w-10" variant="outline" instagram={c.instagram} facebook={c.facebook} />
               </div>
               <img src={c.group} alt={`${c.name} KCM group`} loading="lazy" class="reveal mt-8 aspect-[4/3] w-full rounded-2xl object-cover" />
             </div>
@@ -66,4 +71,59 @@ import { campuses } from "../data/campuses.ts";
       </section>
     ))
   }
+
+  <style>
+    [data-tab][data-active="true"] { color: var(--color-ink); }
+  </style>
+
+  <script>
+    const track = document.querySelector<HTMLElement>("[data-tabs-track]");
+    const indicator = document.querySelector<HTMLElement>("[data-tabs-indicator]");
+    const tabs = Array.from(document.querySelectorAll<HTMLAnchorElement>("[data-tab]"));
+    const sections = tabs
+      .map((t) => document.getElementById(t.dataset.tab || ""))
+      .filter((el): el is HTMLElement => !!el);
+
+    if (track && indicator && tabs.length) {
+      const moveTo = (tab: HTMLAnchorElement) => {
+        indicator.style.opacity = "1";
+        indicator.style.width = `${tab.offsetWidth}px`;
+        indicator.style.transform = `translateX(${tab.offsetLeft}px)`;
+      };
+
+      const setActive = (slug: string) => {
+        const tab = tabs.find((t) => t.dataset.tab === slug);
+        if (!tab) return;
+        tabs.forEach((t) => t.setAttribute("data-active", String(t === tab)));
+        moveTo(tab);
+        // keep the active tab visible in the horizontal scroller
+        const left = tab.offsetLeft - track.clientWidth / 2 + tab.offsetWidth / 2;
+        track.scrollTo({ left, behavior: "smooth" });
+      };
+
+      // scroll-spy: whichever section is closest to the top band wins
+      const io = new IntersectionObserver(
+        (entries) => {
+          const visible = entries
+            .filter((e) => e.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+          if (visible?.target.id) setActive(visible.target.id);
+        },
+        { rootMargin: "-45% 0px -45% 0px", threshold: [0, 0.25, 0.5, 1] }
+      );
+      sections.forEach((s) => io.observe(s));
+
+      // click: let the hash jump happen, then snap the indicator
+      tabs.forEach((t) =>
+        t.addEventListener("click", () => setActive(t.dataset.tab || ""))
+      );
+      // recompute on resize
+      window.addEventListener("resize", () => {
+        const active = tabs.find((t) => t.getAttribute("data-active") === "true");
+        if (active) moveTo(active);
+      });
+      // initial
+      if (sections[0]) setActive(sections[0].id);
+    }
+  </script>
 </Layout>

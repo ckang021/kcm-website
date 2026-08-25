@@ -1,5 +1,6 @@
 ---
 import { nav } from "../data/site.ts";
+import Logo from "./Logo.astro";
 
 interface Props {
   /** "dark" = page opens with a dark hero, so nav sits white/transparent until scrolled. */
@@ -18,13 +19,8 @@ const isActive = (href: string) =>
   class="fixed inset-x-0 top-0 z-50 transition-all duration-300"
 >
   <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
-    <a href="/" aria-label="Kristos Campus Missions — Home" class="shrink-0">
-      <span
-        data-logo
-        class="grid h-9 w-9 place-items-center border font-display text-sm font-bold tracking-tight"
-      >
-        KCM
-      </span>
+    <a href="/" aria-label="Kristos Campus Missions — Home" data-logo class="shrink-0">
+      <Logo class="h-8" link={false} />
     </a>
 
     <!-- Desktop nav -->
@@ -127,7 +123,7 @@ const isActive = (href: string) =>
 
 <style>
   /* --- Default (light) top theme: dark ink on transparent --- */
-  [data-header] [data-logo] { border-color: var(--color-ink); color: var(--color-ink); }
+  [data-header] [data-logo] { color: var(--color-ink); }
   [data-header] [data-nav-link] { color: var(--color-ash); }
   [data-header] [data-nav-link][data-active="true"] { color: var(--color-ink); }
   [data-header] [data-nav-link]:hover { color: var(--color-ink); }
@@ -135,7 +131,7 @@ const isActive = (href: string) =>
   [data-header] [data-burger] { color: var(--color-ink); }
 
   /* --- Dark top theme (over a dark hero): white until scrolled --- */
-  [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-logo] { border-color: #fff; color: #fff; }
+  [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-logo] { color: #fff; }
   [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-nav-link] { color: rgba(255,255,255,0.7); }
   [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-nav-link][data-active="true"],
   [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-nav-link]:hover { color: #fff; }
