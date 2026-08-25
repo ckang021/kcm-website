@@ -68,29 +68,22 @@
   color: rgba(255, 255, 255, 0.55);
 }
 
-/* Dark CTA band: an ambient glow blooms in and gently breathes behind the
-   content while the band is hovered (used on the "Give"-style CTAs). */
-.cta-glow {
+/* Dark CTA band: on hover a circle of a lighter shade of black expands from
+   the centre like a bubble, filling the band (used on the "Give"-style CTAs).
+   The percentage clip radius covers exactly to the corners at any aspect. */
+.cta-bubble {
   position: absolute;
-  inset: -25%;
+  inset: 0;
   pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.7s ease;
-  background:
-    radial-gradient(35% 45% at 50% 60%, rgba(255, 255, 255, 0.18), transparent 70%),
-    radial-gradient(28% 34% at 20% 28%, rgba(255, 255, 255, 0.07), transparent 72%),
-    radial-gradient(28% 34% at 82% 30%, rgba(255, 255, 255, 0.07), transparent 72%);
+  background-color: #1e1e22; /* a lighter shade of black than the ink bg */
+  clip-path: circle(0% at 50% 50%);
+  transition: clip-path 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.cta-band:hover .cta-glow {
-  opacity: 1;
-  animation: cta-breathe 6s ease-in-out infinite;
-}
-@keyframes cta-breathe {
-  0%, 100% { transform: scale(1) translateY(0); }
-  50% { transform: scale(1.14) translateY(-1.5%); }
+.cta-band:hover .cta-bubble {
+  clip-path: circle(72% at 50% 50%);
 }
 @media (prefers-reduced-motion: reduce) {
-  .cta-band:hover .cta-glow { animation: none; }
+  .cta-bubble { transition: none; }
 }
 
 /* Scroll-reveal animation (progressively enhanced via JS) */
