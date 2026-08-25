@@ -69,18 +69,20 @@
 }
 
 /* Dark CTA band: on hover a circle of a lighter shade of black expands from
-   the centre like a bubble, filling the band (used on the "Give"-style CTAs).
-   The percentage clip radius covers exactly to the corners at any aspect. */
+   behind the button like a bubble, filling the band, and retracts back to the
+   button on leave (used on the "Give"-style CTAs). The origin (--cta-x/y) and
+   the radius (--cta-r, sized to reach the farthest corner from that origin) are
+   set per-band by a small script; the defaults keep it centred if JS is off. */
 .cta-bubble {
   position: absolute;
   inset: 0;
   pointer-events: none;
   background-color: #1e1e22; /* a lighter shade of black than the ink bg */
-  clip-path: circle(0% at 50% 50%);
-  transition: clip-path 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  clip-path: circle(0% at var(--cta-x, 50%) var(--cta-y, 50%));
+  transition: clip-path 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .cta-band:hover .cta-bubble {
-  clip-path: circle(72% at 50% 50%);
+  clip-path: circle(var(--cta-r, 75%) at var(--cta-x, 50%) var(--cta-y, 50%));
 }
 @media (prefers-reduced-motion: reduce) {
   .cta-bubble { transition: none; }

@@ -73,6 +73,34 @@ const ogImage = new URL("/images/home/1-13.jpg", site.url).href;
         );
         els.forEach((el) => io.observe(el));
       }
+
+      // Dark CTA bubble: anchor the expanding circle behind the band's button.
+      const bands = document.querySelectorAll<HTMLElement>(".cta-band");
+      if (bands.length) {
+        const place = () => {
+          bands.forEach((band) => {
+            const btn = band.querySelector<HTMLElement>("a");
+            if (!btn) return;
+            const b = band.getBoundingClientRect();
+            if (!b.width || !b.height) return;
+            const r = btn.getBoundingClientRect();
+            const cx = r.left + r.width / 2 - b.left;
+            const cy = r.top + r.height / 2 - b.top;
+            // clip-path % radius reference: sqrt(w^2 + h^2) / sqrt(2)
+            const ref = Math.sqrt(b.width ** 2 + b.height ** 2) / Math.SQRT2;
+            // farthest corner from the button origin → radius that fully covers
+            let far = 0;
+            for (const [x, y] of [[0, 0], [b.width, 0], [0, b.height], [b.width, b.height]]) {
+              far = Math.max(far, Math.hypot(x - cx, y - cy));
+            }
+            band.style.setProperty("--cta-x", ((cx / b.width) * 100).toFixed(2) + "%");
+            band.style.setProperty("--cta-y", ((cy / b.height) * 100).toFixed(2) + "%");
+            band.style.setProperty("--cta-r", ((far / ref) * 100 * 1.04).toFixed(2) + "%");
+          });
+        };
+        place();
+        window.addEventListener("resize", place, { passive: true });
+      }
     </script>
   </body>
 </html>
