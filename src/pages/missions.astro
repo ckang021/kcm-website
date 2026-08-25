@@ -41,11 +41,11 @@ import { missionsIntro, teams } from "../data/missions.ts";
   <!-- Teams board -->
   <section class="border-b border-line bg-ink py-24 text-paper sm:py-28">
     <div class="mx-auto max-w-7xl px-5 sm:px-8">
-      <p class="eyebrow text-white/50">2025 STSM Teams</p>
-      <div class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3">
+      <p class="eyebrow text-white/50">2026 STSM Teams</p>
+      <div class="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {
           teams.map((t) => (
-            <a href={`#${t.slug}`} class="group relative aspect-[4/5] overflow-hidden rounded-2xl">
+            <a href={`#${t.slug}`} class="group relative aspect-[3/2] overflow-hidden rounded-2xl">
               <img src={t.cover} alt={t.country} loading="lazy" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
               <div class="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/20 to-transparent"></div>
               <div class="absolute bottom-0 left-0 p-5">
@@ -84,7 +84,7 @@ import { missionsIntro, teams } from "../data/missions.ts";
             </div>
           ) : (
             <div class="mt-10 overflow-hidden rounded-2xl">
-              <img src={t.cover} alt={t.country} loading="lazy" class="aspect-[16/9] w-full object-cover" />
+              <img src={t.cover} alt={t.country} loading="lazy" class="aspect-[3/2] w-full object-cover" />
             </div>
           )}
         </div>

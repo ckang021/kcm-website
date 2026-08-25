@@ -14,11 +14,11 @@ export const missionsIntro = {
   heading: "Our Missions Program",
   body: "KCM aims to support and send collegians to various countries to partake in the Great Commission. Every year, KCM sends multiple teams to support missionaries and their ministries in varying locations within their respective countries.",
   hashtag: "#go",
-  season: "STSM 2025",
+  season: "STSM 2026",
   hero: g("hike.jpg"),
 };
 
-// Short-Term Summer Missions — 2025 teams (order matches the live "2025 STSM Teams" board).
+// Short-Term Summer Missions — 2026 teams (order matches the "2026 STSM Teams" board).
 export const teams: MissionTeam[] = [
   {
     slug: "cambodia",
