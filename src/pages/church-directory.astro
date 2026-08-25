@@ -52,7 +52,7 @@ const total = all.length;
     <div class="order-1 lg:order-2">
       <div
         id="map"
-        class="h-[55vh] w-full bg-bone lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)]"
+        class="h-[60vh] min-h-[440px] w-full bg-bone lg:sticky lg:top-16 lg:h-[calc(100dvh-4rem)] lg:min-h-[560px]"
         role="application"
         aria-label="Map of partner churches"
       >
@@ -229,9 +229,25 @@ const total = all.length;
 
     // Initial view
     fit(data);
-    // Recalculate size once laid out (sticky/grid can mis-measure on first paint)
-    setTimeout(() => map.invalidateSize(), 200);
+
+    // Re-measure whenever the map box actually gets/changes size.
+    // (sticky + grid + vh/dvh heights can report 0 on first paint)
+    const mapEl = document.getElementById("map")!;
+    let lastH = 0;
+    const remeasure = () => {
+      map.invalidateSize();
+      const h = mapEl.clientHeight;
+      if (h > 0 && Math.abs(h - lastH) > 4) {
+        lastH = h;
+        fit(data); // refit once we have a real height
+      }
+    };
+    if ("ResizeObserver" in window) {
+      new ResizeObserver(remeasure).observe(mapEl);
+    }
     window.addEventListener("resize", () => map.invalidateSize());
+    window.addEventListener("load", remeasure);
+    setTimeout(remeasure, 300);
   </script>
 
   <style is:global>

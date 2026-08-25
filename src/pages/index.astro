@@ -11,21 +11,27 @@ const gallery = Array.from({ length: 12 }, (_, i) =>
 
 <Layout topTheme="dark">
   <!-- HERO -->
-  <section class="relative flex min-h-[92vh] items-end overflow-hidden">
-    <img
-      src="/images/home/1-13.jpg"
-      alt="The KCM community gathered together"
+  <section class="relative flex min-h-[92vh] items-end overflow-hidden bg-ink">
+    <video
       class="absolute inset-0 h-full w-full object-cover"
-      fetchpriority="high"
-    />
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="auto"
+      poster="/videos/home-hero-poster.jpg"
+      aria-hidden="true"
+    >
+      <source src="/videos/home-hero-web.mp4" type="video/mp4" />
+    </video>
     <div class="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/40 to-ink/30"></div>
-    <!-- glossy bleed into the page below -->
+    <!-- soft seam into the page below -->
     <div
-      class="pointer-events-none absolute inset-x-0 bottom-0 h-40 sm:h-56"
-      style="background:linear-gradient(to bottom, rgba(0,0,0,0) 0%, var(--color-paper) 78%, var(--color-paper) 100%)"
+      class="pointer-events-none absolute inset-x-0 bottom-0 h-20 sm:h-28"
+      style="background:linear-gradient(to bottom, rgba(0,0,0,0) 0%, var(--color-paper) 96%)"
     >
     </div>
-    <div class="relative mx-auto w-full max-w-7xl px-5 pb-28 pt-40 sm:px-8 sm:pb-40">
+    <div class="relative mx-auto w-full max-w-7xl px-5 pb-24 pt-40 sm:px-8 sm:pb-32">
       <p class="eyebrow text-white/70">Kristos Campus Missions</p>
       <h1 class="mt-5 max-w-4xl font-display text-4xl font-bold leading-[1.04] tracking-tight text-white sm:text-6xl lg:text-7xl">
         Discipling collegians for the mission of God.

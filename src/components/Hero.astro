@@ -32,20 +32,14 @@ const {
   <!-- readability overlay -->
   <div class="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/35 to-ink/15"></div>
 
-  <!-- glossy bleed: image melts into the page below -->
+  <!-- soft seam: image settles into the page below at the very bottom edge -->
   <div
-    class="pointer-events-none absolute inset-x-0 bottom-0 h-40 sm:h-56"
-    style={`background:linear-gradient(to bottom, rgba(0,0,0,0) 0%, ${bleed} 78%, ${bleed} 100%)`}
-  >
-  </div>
-  <!-- subtle sheen just above the bleed line -->
-  <div
-    class="pointer-events-none absolute inset-x-0 bottom-40 h-24 opacity-60 sm:bottom-56"
-    style="background:linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.06) 100%)"
+    class="pointer-events-none absolute inset-x-0 bottom-0 h-20 sm:h-28"
+    style={`background:linear-gradient(to bottom, rgba(0,0,0,0) 0%, ${bleed} 96%)`}
   >
   </div>
 
-  <div class="relative mx-auto w-full max-w-7xl px-5 pb-28 pt-40 sm:px-8 sm:pb-40">
+  <div class="relative mx-auto w-full max-w-7xl px-5 pb-24 pt-40 sm:px-8 sm:pb-28">
     {eyebrow && <p class="eyebrow text-white/70">{eyebrow}</p>}
     <h1 class="mt-4 max-w-3xl font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-6xl">
       {title}

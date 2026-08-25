@@ -51,5 +51,6 @@ export const nav = [
   { label: "Staff", href: "/staff" },
   { label: "Campuses", href: "/campuses" },
   { label: "Missions", href: "/missions" },
+  { label: "Events", href: "/events" },
   { label: "Church Directory", href: "/church-directory" },
 ];

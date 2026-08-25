@@ -1,0 +1,301 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
+import { events, CATEGORIES } from "../data/events.ts";
+---
+
+<Layout
+  title="Events"
+  description="Upcoming federal KCM events — conferences, gatherings, sports, and missions across Southern California."
+  topTheme="dark"
+>
+  <Hero
+    image="/images/home/1-2.jpg"
+    alt="KCM students gathered at an event"
+    eyebrow="What's Happening"
+    title="KCM Events"
+    intro="Federal events we're hosting throughout the year — mark your calendars."
+    minH="min-h-[56vh]"
+  />
+
+  <section class="bg-paper py-16 sm:py-20">
+    <div class="mx-auto max-w-7xl px-5 sm:px-8">
+      <div class="grid gap-12 lg:grid-cols-[1fr_minmax(300px,360px)] lg:gap-14">
+        <!-- CALENDAR -->
+        <div>
+          <div class="flex items-center justify-between gap-4">
+            <h2 id="cal-title" class="font-display text-2xl font-bold tracking-tight sm:text-3xl">&nbsp;</h2>
+            <div class="flex items-center gap-2">
+              <button type="button" data-cal-today class="rounded-full border border-line px-4 py-1.5 text-sm font-medium transition-colors hover:border-ink">
+                Today
+              </button>
+              <button type="button" data-cal-prev aria-label="Previous month" class="grid h-9 w-9 place-items-center rounded-full border border-line transition-colors hover:border-ink">
+                <span class="text-lg leading-none">‹</span>
+              </button>
+              <button type="button" data-cal-next aria-label="Next month" class="grid h-9 w-9 place-items-center rounded-full border border-line transition-colors hover:border-ink">
+                <span class="text-lg leading-none">›</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- weekday header -->
+          <div class="mt-6 grid grid-cols-7 border-b border-line pb-2 text-center">
+            {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
+              <div class="text-[11px] font-medium uppercase tracking-wider text-ash">
+                <span class="sm:hidden">{d[0]}</span>
+                <span class="hidden sm:inline">{d}</span>
+              </div>
+            ))}
+          </div>
+
+          <!-- day grid (filled by JS) -->
+          <div id="cal-grid" class="grid grid-cols-7"></div>
+
+          <!-- legend -->
+          <div class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-ash">
+            <span class="inline-flex items-center gap-1.5">
+              <span class="grid h-4 w-4 place-items-center rounded-full bg-ink text-[9px] font-bold text-paper">•</span>
+              Event day
+            </span>
+            <span class="inline-flex items-center gap-1.5">
+              <span class="h-4 w-4 rounded-full ring-2 ring-ink"></span>
+              Today
+            </span>
+          </div>
+        </div>
+
+        <!-- UPCOMING -->
+        <aside>
+          <h2 class="font-display text-2xl font-bold tracking-tight sm:text-3xl">Upcoming</h2>
+          <div id="upcoming-list" class="mt-6 space-y-3"></div>
+          <p id="upcoming-empty" class="mt-6 hidden text-ash">No upcoming events scheduled yet — check back soon.</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- event detail modal -->
+  <div data-ev-modal class="fixed inset-0 z-[60] hidden items-center justify-center bg-ink/70 p-5 backdrop-blur-sm">
+    <div class="relative w-full max-w-md rounded-2xl bg-paper p-7 shadow-2xl">
+      <button data-ev-close aria-label="Close" class="absolute right-4 top-4 text-2xl leading-none text-ash hover:text-ink">&times;</button>
+      <p data-ev-cat class="eyebrow"></p>
+      <h3 data-ev-title class="mt-3 font-display text-2xl font-bold tracking-tight"></h3>
+      <div class="mt-4 space-y-1.5 text-sm text-ink/80">
+        <p data-ev-date class="font-medium"></p>
+        <p data-ev-time></p>
+        <p data-ev-loc></p>
+      </div>
+      <p data-ev-desc class="mt-4 leading-relaxed text-ash"></p>
+      <a data-ev-link href="#" target="_blank" rel="noopener" class="mt-5 hidden rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-paper transition-transform hover:-translate-y-0.5">
+        More info →
+      </a>
+    </div>
+  </div>
+
+  <script
+    type="application/json"
+    id="events-data"
+    set:html={JSON.stringify({ events, categories: CATEGORIES })}
+  />
+
+  <script>
+    type Ev = {
+      title: string;
+      start: string;
+      end?: string;
+      time?: string;
+      location?: string;
+      category?: string;
+      description?: string;
+      link?: string;
+    };
+
+    const payload = JSON.parse(document.getElementById("events-data")!.textContent || "{}");
+    const events: Ev[] = payload.events || [];
+    const categories: Record<string, string> = payload.categories || {};
+
+    // ---- date helpers (parse YYYY-MM-DD as a LOCAL date) ----
+    const parse = (s: string) => {
+      const [y, m, d] = s.split("-").map(Number);
+      return new Date(y, m - 1, d);
+    };
+    const key = (d: Date) =>
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+    // ---- map every calendar day -> events on that day (expand multi-day) ----
+    const byDay = new Map<string, Ev[]>();
+    for (const ev of events) {
+      const s = parse(ev.start);
+      const e = ev.end ? parse(ev.end) : s;
+      for (let d = new Date(s); d <= e; d.setDate(d.getDate() + 1)) {
+        const k = key(d);
+        if (!byDay.has(k)) byDay.set(k, []);
+        byDay.get(k)!.push(ev);
+      }
+    }
+
+    const fmtRange = (ev: Ev) => {
+      const s = parse(ev.start);
+      const opts: Intl.DateTimeFormatOptions = { weekday: "long", month: "long", day: "numeric", year: "numeric" };
+      if (!ev.end || ev.end === ev.start) return s.toLocaleDateString("en-US", opts);
+      const e = parse(ev.end);
+      const sameMonth = s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear();
+      const sStr = s.toLocaleDateString("en-US", { month: "long", day: "numeric" });
+      const eStr = e.toLocaleDateString("en-US", sameMonth ? { day: "numeric", year: "numeric" } : { month: "long", day: "numeric", year: "numeric" });
+      return `${sStr} – ${eStr}`;
+    };
+
+    // ---- modal ----
+    const modal = document.querySelector<HTMLElement>("[data-ev-modal]")!;
+    const set = (sel: string, text: string, showIfEmptyHide = true) => {
+      const el = modal.querySelector<HTMLElement>(sel)!;
+      el.textContent = text;
+      if (showIfEmptyHide) el.classList.toggle("hidden", !text);
+    };
+    const openModal = (ev: Ev) => {
+      set("[data-ev-cat]", categories[ev.category || ""] || "Event", false);
+      set("[data-ev-title]", ev.title, false);
+      set("[data-ev-date]", fmtRange(ev), false);
+      set("[data-ev-time]", ev.time ? `🕑 ${ev.time}` : "");
+      set("[data-ev-loc]", ev.location ? `📍 ${ev.location}` : "");
+      set("[data-ev-desc]", ev.description || "");
+      const link = modal.querySelector<HTMLAnchorElement>("[data-ev-link]")!;
+      if (ev.link) { link.href = ev.link; link.classList.remove("hidden"); }
+      else link.classList.add("hidden");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+      document.body.style.overflow = "hidden";
+    };
+    const closeModal = () => {
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+      document.body.style.overflow = "";
+    };
+    modal.addEventListener("click", (e) => {
+      const t = e.target as HTMLElement;
+      if (t === modal || t.hasAttribute("data-ev-close")) closeModal();
+    });
+    document.addEventListener("keydown", (e) => e.key === "Escape" && closeModal());
+
+    // ---- calendar rendering ----
+    const grid = document.getElementById("cal-grid")!;
+    const title = document.getElementById("cal-title")!;
+    const today = new Date();
+    const todayKey = key(today);
+    let viewY = today.getFullYear();
+    let viewM = today.getMonth();
+
+    const render = () => {
+      title.textContent = `${MONTHS[viewM]} ${viewY}`;
+      grid.innerHTML = "";
+      const first = new Date(viewY, viewM, 1);
+      const startDay = first.getDay(); // 0=Sun
+      const daysInMonth = new Date(viewY, viewM + 1, 0).getDate();
+      const cells = Math.ceil((startDay + daysInMonth) / 7) * 7;
+
+      for (let i = 0; i < cells; i++) {
+        const dayNum = i - startDay + 1;
+        const inMonth = dayNum >= 1 && dayNum <= daysInMonth;
+        const cell = document.createElement("div");
+        cell.className =
+          "min-h-[68px] border-b border-r border-line p-1.5 sm:min-h-[110px] sm:p-2 " +
+          (i % 7 === 0 ? "border-l " : "") +
+          (i < 7 ? "border-t " : "");
+        if (!inMonth) { cell.classList.add("bg-bone/40"); grid.appendChild(cell); continue; }
+
+        const d = new Date(viewY, viewM, dayNum);
+        const k = key(d);
+        const evs = byDay.get(k) || [];
+        const isToday = k === todayKey;
+
+        const num = document.createElement("div");
+        num.className =
+          "flex h-6 w-6 items-center justify-center text-xs font-medium tabular-nums " +
+          (isToday ? "rounded-full bg-ink text-paper" : "text-ink/70");
+        num.textContent = String(dayNum);
+        cell.appendChild(num);
+
+        if (evs.length) {
+          // mobile: dots
+          const dots = document.createElement("div");
+          dots.className = "mt-1 flex gap-0.5 sm:hidden";
+          evs.slice(0, 3).forEach(() => {
+            const dot = document.createElement("span");
+            dot.className = "h-1.5 w-1.5 rounded-full bg-ink";
+            dots.appendChild(dot);
+          });
+          cell.appendChild(dots);
+          // sm+: chips
+          const chips = document.createElement("div");
+          chips.className = "mt-1 hidden space-y-1 sm:block";
+          evs.slice(0, 3).forEach((ev) => {
+            const chip = document.createElement("button");
+            chip.type = "button";
+            chip.className =
+              "block w-full truncate rounded bg-ink px-1.5 py-0.5 text-left text-[11px] font-medium text-paper transition-opacity hover:opacity-80";
+            chip.textContent = ev.title;
+            chip.addEventListener("click", () => openModal(ev));
+            chips.appendChild(chip);
+          });
+          if (evs.length > 3) {
+            const more = document.createElement("div");
+            more.className = "text-[10px] text-ash";
+            more.textContent = `+${evs.length - 3} more`;
+            chips.appendChild(more);
+          }
+          cell.appendChild(chips);
+          // whole cell clickable on mobile (opens first event)
+          cell.classList.add("cursor-pointer");
+          cell.addEventListener("click", (e) => {
+            if ((e.target as HTMLElement).closest("button")) return;
+            openModal(evs[0]);
+          });
+        }
+        grid.appendChild(cell);
+      }
+    };
+
+    document.querySelector("[data-cal-prev]")!.addEventListener("click", () => {
+      viewM--; if (viewM < 0) { viewM = 11; viewY--; } render();
+    });
+    document.querySelector("[data-cal-next]")!.addEventListener("click", () => {
+      viewM++; if (viewM > 11) { viewM = 0; viewY++; } render();
+    });
+    document.querySelector("[data-cal-today]")!.addEventListener("click", () => {
+      viewY = today.getFullYear(); viewM = today.getMonth(); render();
+    });
+
+    // ---- upcoming list ----
+    const upcomingWrap = document.getElementById("upcoming-list")!;
+    const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const upcoming = events
+      .filter((ev) => (ev.end ? parse(ev.end) : parse(ev.start)) >= startOfToday)
+      .sort((a, b) => parse(a.start).getTime() - parse(b.start).getTime());
+
+    if (!upcoming.length) {
+      document.getElementById("upcoming-empty")!.classList.remove("hidden");
+    } else {
+      for (const ev of upcoming) {
+        const s = parse(ev.start);
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className =
+          "flex w-full items-center gap-4 rounded-xl border border-line p-3 text-left transition-colors hover:border-ink";
+        card.innerHTML = `
+          <div class="grid h-14 w-14 shrink-0 flex-col place-items-center rounded-lg bg-ink text-paper">
+            <span class="text-[10px] font-medium uppercase leading-none">${s.toLocaleDateString("en-US", { month: "short" })}</span>
+            <span class="font-display text-xl font-bold leading-tight">${s.getDate()}</span>
+          </div>
+          <div class="min-w-0">
+            <p class="truncate font-medium leading-tight tracking-tight">${ev.title}</p>
+            <p class="mt-0.5 text-xs text-ash">${[categories[ev.category || ""] || "Event", ev.time, ev.location].filter(Boolean).join(" · ")}</p>
+          </div>`;
+        card.addEventListener("click", () => openModal(ev));
+        upcomingWrap.appendChild(card);
+      }
+    }
+
+    render();
+  </script>
+</Layout>

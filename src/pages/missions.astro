@@ -8,13 +8,13 @@ import { missionsIntro, teams } from "../data/missions.ts";
   <section class="relative flex min-h-[70vh] items-end overflow-hidden">
     <img src={missionsIntro.hero} alt="KCM missions" class="absolute inset-0 h-full w-full object-cover" fetchpriority="high" />
     <div class="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/50 to-ink/30"></div>
-    <!-- glossy bleed into the page below -->
+    <!-- soft seam into the page below -->
     <div
-      class="pointer-events-none absolute inset-x-0 bottom-0 h-40 sm:h-56"
-      style="background:linear-gradient(to bottom, rgba(0,0,0,0) 0%, var(--color-paper) 78%, var(--color-paper) 100%)"
+      class="pointer-events-none absolute inset-x-0 bottom-0 h-20 sm:h-28"
+      style="background:linear-gradient(to bottom, rgba(0,0,0,0) 0%, var(--color-paper) 96%)"
     >
     </div>
-    <div class="relative mx-auto w-full max-w-7xl px-5 pb-28 pt-40 sm:px-8 sm:pb-40">
+    <div class="relative mx-auto w-full max-w-7xl px-5 pb-24 pt-40 sm:px-8 sm:pb-28">
       <p class="max-w-2xl font-display text-2xl font-medium leading-snug tracking-tight text-white sm:text-4xl sm:leading-[1.2]">
         &ldquo;{missionsIntro.verse}&rdquo;
       </p>
