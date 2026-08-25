@@ -1,7 +1,44 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Hero from "../components/Hero.astro";
-import { steeringCore, staffGroups, staffPhoto } from "../data/staff.ts";
+import Logo from "../components/Logo.astro";
+import { steeringCore, staffPhoto } from "../data/staff.ts";
+
+const director = steeringCore[0];
+const core = steeringCore.slice(1);
+
+// Org structure: KCM organizes on two levels, each with its groups.
+const levels = [
+  {
+    name: "Federal Level",
+    note: "Serves KCM as a whole — mobilizing and running every federal event throughout the year.",
+    groups: [
+      {
+        title: "Steering Core",
+        body: "Leads all of KCM federally, planning alongside campus cores and staff to push every federal event.",
+      },
+      {
+        title: "Federal Staff",
+        body: "Supports KCM as a whole, serving to mobilize and run the federal events held throughout the year.",
+      },
+    ],
+  },
+  {
+    name: "Campus Level",
+    note: "Serves collegians on the ground at each of our 8 SoCal campuses.",
+    groups: [
+      {
+        title: "Campus Staff",
+        body: "Supports each campus on a campus level, walking alongside the cores at their assigned campus.",
+      },
+      {
+        title: "Campus Cores",
+        body: "Student leaders who shepherd the community and ministry at their own campus.",
+        href: "/campuses",
+      },
+    ],
+  },
+];
 ---
 
 <Layout title="Staff" description="Meet the KCM staff — Steering Core, Campus Staff, and Federal Staff." topTheme="dark">
@@ -13,19 +50,59 @@ import { steeringCore, staffGroups, staffPhoto } from "../data/staff.ts";
     intro="KCM structures on two levels: Campus and Federal."
   />
 
-  <!-- Structure -->
+  <!-- Org structure diagram -->
   <section class="bg-paper py-24 sm:py-28">
-    <div class="mx-auto max-w-7xl px-5 sm:px-8">
-      <div class="grid gap-8 md:grid-cols-3">
-        {
-          staffGroups.map((s, i) => (
-            <div class="reveal rounded-2xl border border-line p-8">
-              <span class="font-display text-sm font-bold text-ash">0{i + 1}</span>
-              <h2 class="mt-4 font-display text-2xl font-bold tracking-tight">{s.title}</h2>
-              <p class="mt-3 leading-relaxed text-ash">{s.body}</p>
-            </div>
-          ))
-        }
+    <div class="mx-auto max-w-5xl px-5 sm:px-8">
+      <p class="eyebrow reveal">How KCM is organized</p>
+      <h2 class="reveal mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">Two levels, one body.</h2>
+
+      <div class="org reveal mt-16">
+        <!-- root -->
+        <div class="flex justify-center">
+          <div class="org-root">
+            <Logo class="h-5 text-paper" link={false} />
+            <span>KCM</span>
+          </div>
+        </div>
+        <div class="org-trunk" aria-hidden="true"></div>
+
+        <!-- two levels -->
+        <div class="org-levels grid gap-8 sm:grid-cols-2 sm:gap-10">
+          {
+            levels.map((lvl) => (
+              <div class="org-col">
+                <div class="org-level">
+                  <p class="font-display text-lg font-bold tracking-tight">{lvl.name}</p>
+                  <p class="mt-1 text-sm text-ash">{lvl.note}</p>
+                </div>
+                <div class="mt-6 space-y-4">
+                  {lvl.groups.map((g) => {
+                    const Tag = g.href ? "a" : "div";
+                    return (
+                      <Tag
+                        {...(g.href ? { href: g.href } : {})}
+                        class:list={[
+                          "org-node group block rounded-2xl border border-line bg-paper p-6 transition-colors",
+                          g.href && "hover:border-ink",
+                        ]}
+                      >
+                        <div class="flex items-center justify-between">
+                          <h3 class="font-display text-xl font-bold tracking-tight">{g.title}</h3>
+                          {g.href && (
+                            <span class="text-lg text-ash transition-transform group-hover:translate-x-1 group-hover:text-ink">
+                              →
+                            </span>
+                          )}
+                        </div>
+                        <p class="mt-2 text-sm leading-relaxed text-ash">{g.body}</p>
+                      </Tag>
+                    );
+                  })}
+                </div>
+              </div>
+            ))
+          }
+        </div>
       </div>
     </div>
   </section>
@@ -39,12 +116,29 @@ import { steeringCore, staffGroups, staffPhoto } from "../data/staff.ts";
         Steering Core leads all of KCM on a federal level, planning alongside campus cores and staff to mobilize
         every federal event throughout the year.
       </p>
-      <div class="mt-12 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:grid-cols-4">
+
+      <!-- Director, featured -->
+      <div class="reveal group mt-12 grid gap-6 rounded-3xl border border-line bg-paper p-5 sm:grid-cols-[minmax(0,300px)_1fr] sm:items-center sm:gap-10 sm:p-8">
+        <div class="aspect-square overflow-hidden rounded-2xl bg-bone sm:aspect-[4/5]">
+          <img src={director.photo} alt={director.name} loading="lazy" class="team-photo h-full w-full object-cover" />
+        </div>
+        <div>
+          <p class="eyebrow">Leadership</p>
+          <p class="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">{director.name}</p>
+          <p class="mt-1 text-lg text-ash">{director.role}</p>
+          <p class="mt-5 max-w-md leading-relaxed text-ash">
+            Leads all of KCM — shepherding Steering Core and setting vision across every campus and federal event.
+          </p>
+        </div>
+      </div>
+
+      <!-- Rest of core -->
+      <div class="mt-8 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3">
         {
-          steeringCore.map((m) => (
-            <div class="reveal">
-              <div class="aspect-square overflow-hidden rounded-2xl bg-bone">
-                <img src={m.photo} alt={m.name} loading="lazy" class="h-full w-full object-cover" />
+          core.map((m) => (
+            <div class="reveal group">
+              <div class="aspect-[4/5] overflow-hidden rounded-2xl bg-bone">
+                <img src={m.photo} alt={m.name} loading="lazy" class="team-photo h-full w-full object-cover" />
               </div>
               <p class="mt-4 font-medium tracking-tight">{m.name}</p>
               <p class="text-sm text-ash">{m.role}</p>
@@ -54,4 +148,75 @@ import { steeringCore, staffGroups, staffPhoto } from "../data/staff.ts";
       </div>
     </div>
   </section>
+
+  <style>
+    /* --- Org chart --- */
+    .org-root {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      background: var(--color-ink);
+      color: var(--color-paper);
+      border-radius: 9999px;
+      padding: 0.65rem 1.5rem;
+      font-family: var(--font-display, inherit);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .org-trunk {
+      width: 1px;
+      height: 2.75rem;
+      margin: 0 auto;
+      background: var(--color-line);
+    }
+    .org-level {
+      border-left: 2px solid var(--color-ink);
+      padding-left: 1rem;
+    }
+    /* connector lines only on the two-column layout */
+    @media (min-width: 640px) {
+      .org-levels {
+        position: relative;
+      }
+      .org-levels::before {
+        content: "";
+        position: absolute;
+        top: -2.75rem;
+        left: 25%;
+        right: 25%;
+        height: 1px;
+        background: var(--color-line);
+      }
+      .org-col::before {
+        content: "";
+        position: absolute;
+        top: -2.75rem;
+        left: 50%;
+        width: 1px;
+        height: 2.75rem;
+        background: var(--color-line);
+      }
+      .org-col {
+        position: relative;
+      }
+    }
+
+    /* --- Team portraits: grayscale, color on hover --- */
+    .team-photo {
+      filter: grayscale(1) contrast(1.02);
+      transition: filter 0.5s ease, transform 0.5s ease;
+    }
+    .group:hover .team-photo {
+      filter: grayscale(0);
+      transform: scale(1.03);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .team-photo {
+        transition: filter 0.3s ease;
+      }
+      .group:hover .team-photo {
+        transform: none;
+      }
+    }
+  </style>
 </Layout>
