@@ -13,7 +13,7 @@
   --color-bone: #f4f3f1; /* near-white, for alternating sections */
   --color-ash: #6b6b6b;
   --color-line: #e4e2df;
-  --color-oatmeal: #e6e0d4; /* warm landing tone for the hero image-fade zones */
+  --color-fade: #1c1c1f; /* dark-gray landing tone the hero image dissolves into */
 
   --color-brand-50: #f6f6f6;
   --color-brand-100: #e7e7e7;
@@ -56,6 +56,16 @@
   text-transform: uppercase;
   font-weight: 500;
   color: var(--color-ash);
+}
+
+/* Dark hero-fade landing section: the hero image dissolves into a dark-gray
+   band with light text (used on Home, About, Missions, Staff). */
+.fade-dark {
+  background-color: var(--color-fade);
+  color: #fff;
+}
+.fade-dark .eyebrow {
+  color: rgba(255, 255, 255, 0.55);
 }
 
 /* Scroll-reveal animation (progressively enhanced via JS) */

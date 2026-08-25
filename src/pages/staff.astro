@@ -51,7 +51,7 @@ const levels = [
   />
 
   <!-- Org structure diagram -->
-  <section class="bg-oatmeal py-24 sm:py-28">
+  <section class="fade-dark py-24 sm:py-28">
     <div class="mx-auto max-w-5xl px-5 sm:px-8">
       <p class="eyebrow reveal">How KCM is organized</p>
       <h2 class="reveal mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">Two levels, one body.</h2>
@@ -73,7 +73,7 @@ const levels = [
               <div class="org-col">
                 <div class="org-level">
                   <p class="font-display text-lg font-bold tracking-tight">{lvl.name}</p>
-                  <p class="mt-1 text-sm text-ash">{lvl.note}</p>
+                  <p class="mt-1 text-sm text-white/60">{lvl.note}</p>
                 </div>
                 <div class="mt-6 space-y-4">
                   {lvl.groups.map((g) => {
@@ -198,6 +198,30 @@ const levels = [
       }
       .org-col {
         position: relative;
+      }
+    }
+
+    /* --- Dark landing section: recolor org chrome for the dark bg
+       (cards stay white so they pop; only lines/root/rule flip to light) --- */
+    .fade-dark .org-root {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.45);
+    }
+    .fade-dark .org-trunk {
+      background: rgba(255, 255, 255, 0.22);
+    }
+    .fade-dark .org-level {
+      border-left-color: #ffffff;
+    }
+    /* cards stay white, so their text must stay dark (not inherit the
+       section's white) */
+    .fade-dark .org-node {
+      color: var(--color-ink);
+    }
+    @media (min-width: 640px) {
+      .fade-dark .org-levels::before,
+      .fade-dark .org-col::before {
+        background: rgba(255, 255, 255, 0.22);
       }
     }
 
