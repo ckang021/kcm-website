@@ -45,21 +45,23 @@ import { site, about } from "../data/site.ts";
   </section>
 
   <!-- CTA -->
-  <section class="bg-ink py-20 text-paper">
-    <div class="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-5 sm:flex-row sm:items-center sm:px-8">
+  <section class="group relative overflow-hidden bg-ink py-20 text-paper">
+    <!-- warm wash slides across the entire black background on hover -->
+    <div
+      class="pointer-events-none absolute inset-0 -translate-x-full bg-[#2b2620] transition-transform duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-0 motion-reduce:hidden"
+      aria-hidden="true"
+    >
+    </div>
+    <div class="relative z-10 mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-5 sm:flex-row sm:items-center sm:px-8">
       <h2 class="max-w-md font-display text-2xl font-bold tracking-tight sm:text-3xl">
         We're spread across 8 SoCal campuses.
       </h2>
       <a
         href="/campuses"
-        class="group relative inline-flex shrink-0 items-center gap-2 overflow-hidden rounded-full bg-white px-6 py-3 text-sm font-medium text-ink ring-1 ring-white/70 transition-colors duration-300 hover:text-white"
+        class="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium text-ink transition-transform duration-300 hover:-translate-y-0.5"
       >
-        <span
-          class="absolute inset-0 -translate-x-full bg-ink transition-transform duration-300 ease-out group-hover:translate-x-0"
-          aria-hidden="true"
-        ></span>
-        <span class="relative z-10">Check out our campuses</span>
-        <span class="relative z-10 transition-transform duration-300 group-hover:translate-x-1">→</span>
+        <span>Check out our campuses</span>
+        <span class="transition-transform duration-300 group-hover:translate-x-1">→</span>
       </a>
     </div>
   </section>
