@@ -138,10 +138,15 @@ const isActive = (href: string) =>
   [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-give] { background: #fff; color: var(--color-ink); }
   [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-burger] { color: #fff; }
 
-  /* --- Scrolled: frosted paper bar --- */
+  /* --- Scrolled: frosted paper bar ---
+     Uses a soft, dark-tinted shadow instead of a hard light border: it gives
+     subtle separation over light content but stays invisible over a dark hero,
+     so no bright line flashes when scrolling back to the top. */
   [data-header][data-scrolled] {
     background-color: color-mix(in srgb, var(--color-paper) 88%, transparent);
     backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--color-line);
+    box-shadow:
+      0 1px 0 rgba(10, 10, 10, 0.07),
+      0 12px 28px -18px rgba(10, 10, 10, 0.22);
   }
 </style>
