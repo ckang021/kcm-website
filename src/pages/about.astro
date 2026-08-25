@@ -46,9 +46,11 @@ import { site, about } from "../data/site.ts";
 
   <!-- CTA -->
   <section class="group relative overflow-hidden bg-ink py-20 text-paper">
-    <!-- warm wash slides across the entire black background on hover -->
+    <!-- warm wash slides across the entire black background on hover;
+         feathered leading edge so it fades in naturally (no hard vertical line) -->
     <div
-      class="pointer-events-none absolute inset-0 -translate-x-full bg-[#2b2620] transition-transform duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-0 motion-reduce:hidden"
+      class="pointer-events-none absolute inset-y-0 left-0 w-[160%] -translate-x-full transition-transform duration-[800ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-0 motion-reduce:hidden"
+      style="background:linear-gradient(to right, #2b2620 0%, #2b2620 66%, rgba(43,38,32,0) 100%)"
       aria-hidden="true"
     >
     </div>
