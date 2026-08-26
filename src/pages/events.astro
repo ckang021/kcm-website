@@ -274,15 +274,27 @@ import { events, CATEGORIES } from "../data/events.ts";
             dots.appendChild(dot);
           });
           cell.appendChild(dots);
-          // sm+: chips
+          // sm+: chips — the event's logo when it has one, else a text pill
           const chips = document.createElement("div");
           chips.className = "mt-1 hidden space-y-1 sm:block";
           evs.slice(0, 3).forEach((ev) => {
             const chip = document.createElement("button");
             chip.type = "button";
-            chip.className =
-              "block w-full truncate rounded bg-ink px-1.5 py-0.5 text-left text-[11px] font-medium text-paper transition-opacity hover:opacity-80";
-            chip.textContent = ev.title;
+            if (ev.logo) {
+              chip.className =
+                "flex w-full items-center justify-center rounded px-1 py-1 transition-colors hover:bg-bone";
+              chip.title = ev.title;
+              const img = document.createElement("img");
+              img.src = ev.logo;
+              img.alt = ev.title;
+              img.loading = "lazy";
+              img.className = "max-h-9 max-w-full object-contain";
+              chip.appendChild(img);
+            } else {
+              chip.className =
+                "block w-full truncate rounded bg-ink px-1.5 py-0.5 text-left text-[11px] font-medium text-paper transition-opacity hover:opacity-80";
+              chip.textContent = ev.title;
+            }
             chip.addEventListener("click", () => openModal(ev));
             chips.appendChild(chip);
           });

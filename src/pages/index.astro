@@ -2,12 +2,24 @@
 import Layout from "../layouts/Layout.astro";
 import Logo from "../components/Logo.astro";
 import Socials from "../components/Socials.astro";
-import { site, resources } from "../data/site.ts";
+import { site } from "../data/site.ts";
 import { campuses } from "../data/campuses.ts";
 
-const gallery = Array.from({ length: 12 }, (_, i) =>
-  i === 0 ? "/images/home/image-asset.jpg" : `/images/home/image-asset-${i + 1}.jpg`
-);
+// Real event photography (people + moments from KCM events), no promo graphics.
+const gallery = [
+  "/images/home/event-01.jpg",
+  "/images/home/image-asset-2.jpg",
+  "/images/home/event-02.jpg",
+  "/images/home/event-03.jpg",
+  "/images/home/image-asset-4.jpg",
+  "/images/home/event-04.jpg",
+  "/images/home/event-05.jpg",
+  "/images/home/image-asset-6.jpg",
+  "/images/home/event-06.jpg",
+  "/images/home/event-07.jpg",
+  "/images/home/event-08.jpg",
+  "/images/home/event-09.jpg",
+];
 ---
 
 <Layout topTheme="dark">
@@ -210,30 +222,6 @@ const gallery = Array.from({ length: 12 }, (_, i) =>
               class="reveal w-full rounded-lg object-cover"
               style={`transition-delay:${(i % 4) * 60}ms`}
             />
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  <!-- RESOURCES / APPS -->
-  <section class="border-b border-line bg-bone py-20">
-    <div class="mx-auto max-w-7xl px-5 sm:px-8">
-      <div class="grid gap-4 sm:grid-cols-2">
-        {
-          resources.map((r) => (
-            <a
-              href={r.href}
-              target="_blank"
-              rel="noopener"
-              class="reveal group flex items-center justify-between rounded-2xl border border-line bg-paper p-7 transition-colors hover:border-ink"
-            >
-              <div>
-                <p class="font-display text-xl font-bold tracking-tight">{r.label}</p>
-                <p class="mt-1 text-sm text-ash">{r.note}</p>
-              </div>
-              <span class="text-2xl text-ash transition-transform group-hover:translate-x-1 group-hover:text-ink">→</span>
-            </a>
           ))
         }
       </div>

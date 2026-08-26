@@ -19,7 +19,7 @@ const {
 } = Astro.props;
 
 const base =
-  "inline-flex items-center justify-center rounded-full transition-all hover:-translate-y-0.5";
+  "social-link inline-flex items-center justify-center rounded-full transition-all hover:-translate-y-0.5";
 const styles: Record<string, string> = {
   solid: "bg-ink text-paper hover:bg-ink/90",
   outline: "border border-line text-ink hover:border-ink",
@@ -36,12 +36,27 @@ const links = [
 <div class="inline-flex items-center gap-3">
   {
     links.map((l) => (
-      <a href={l.href} target="_blank" rel="noopener" aria-label={l.label} class={cls}>
+      <a
+        href={l.href}
+        target="_blank"
+        rel="noopener"
+        aria-label={l.label}
+        class:list={[cls, l.label === "Instagram" ? "social-ig" : "social-fb"]}
+      >
         {l.label === "Instagram" ? (
           <svg viewBox="0 0 24 24" class="h-[46%] w-[46%]" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <rect x="2.5" y="2.5" width="19" height="19" rx="5.2" />
-            <circle cx="12" cy="12" r="4.2" />
-            <circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none" />
+            <defs>
+              <linearGradient id="ig-grad" x1="0" y1="1" x2="1" y2="0">
+                <stop offset="0" stop-color="#feda75" />
+                <stop offset="0.25" stop-color="#fa7e1e" />
+                <stop offset="0.5" stop-color="#d62976" />
+                <stop offset="0.75" stop-color="#962fbf" />
+                <stop offset="1" stop-color="#4f5bd5" />
+              </linearGradient>
+            </defs>
+            <rect class="ig-shape" x="2.5" y="2.5" width="19" height="19" rx="5.2" />
+            <circle class="ig-shape" cx="12" cy="12" r="4.2" />
+            <circle class="ig-dot" cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none" />
           </svg>
         ) : (
           <svg viewBox="0 0 24 24" class="h-[52%] w-[52%]" fill="currentColor" aria-hidden="true">
@@ -52,3 +67,13 @@ const links = [
     ))
   }
 </div>
+
+<style>
+  /* Icon "colors up" into its brand color on hover. */
+  .social-fb { transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease; }
+  .social-fb:hover { color: #1877f2; }
+  /* Instagram: the mark switches to the Instagram gradient on hover. */
+  .social-ig .ig-shape { transition: stroke 0.25s ease; }
+  .social-ig:hover .ig-shape { stroke: url(#ig-grad); }
+  .social-ig:hover .ig-dot { fill: url(#ig-grad); }
+</style>

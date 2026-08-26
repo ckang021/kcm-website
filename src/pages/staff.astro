@@ -68,19 +68,19 @@ const levels = [
         <div class="org-levels grid gap-8 sm:grid-cols-2 sm:gap-10">
           {
             levels.map((lvl) => (
-              <div class="org-col">
+              <div class="org-col flex flex-col">
                 <div class="org-level">
                   <p class="font-display text-lg font-bold tracking-tight">{lvl.name}</p>
                   <p class="mt-1 text-sm text-white/60">{lvl.note}</p>
                 </div>
-                <div class="mt-7 space-y-4">
+                <div class="mt-7 flex flex-1 flex-col gap-4">
                   {lvl.groups.map((g) => {
                     const Tag = g.href ? "a" : "div";
                     return (
                       <Tag
                         {...(g.href ? { href: g.href } : {})}
                         class:list={[
-                          "org-node group block rounded-2xl border border-line bg-paper p-6 transition-colors",
+                          "org-node group flex flex-1 flex-col justify-center rounded-2xl border border-line bg-paper p-6 transition-colors",
                           g.href && "hover:border-ink",
                         ]}
                       >
@@ -131,7 +131,7 @@ const levels = [
       </div>
 
       <!-- Rest of core -->
-      <div class="mt-8 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3">
+      <div class="mt-8 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
         {
           core.map((m) => (
             <div class="reveal group">
@@ -140,6 +140,12 @@ const levels = [
               </div>
               <p class="mt-4 font-medium tracking-tight">{m.name}</p>
               <p class="text-sm text-ash">{m.role}</p>
+              {m.mission && (
+                <p class="mt-2 text-sm leading-relaxed text-ash/90">
+                  <span class="font-medium text-ink">Mission — </span>
+                  {m.mission}
+                </p>
+              )}
             </div>
           ))
         }
