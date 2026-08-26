@@ -15,40 +15,40 @@ export const steeringCore: StaffMember[] = [
     role: "Associate Director / Core Care",
     photo: img("chris-kim.jpg"),
     mission:
-      "This committee exists to encourage and mentor student core leaders through accountability, events, care groups, etc.",
+      "Core Care exists to encourage and mentor student core leaders through accountability, events, care groups, etc.",
   },
   {
     name: "Anna Pellegrini",
     role: "Missions Director",
     photo: img("anna-pellegrini.jpg"),
-    mission: "This committee exists to plan and oversee KCM's STSM program.",
+    mission: "Short-Term Summer Missions (STSM) exists to plan and oversee KCM's STSM program.",
   },
   {
     name: "Ashlyn Hahn",
     role: "GRN / MRN",
     photo: img("ashlyn-hahn.jpg"),
     mission:
-      "This committee exists to plan and execute two major federal events that focus on introducing KCM to all students and promote Short-Term Summer Missions.",
+      "Gospel Renewal Night / Kingdom Come exists to plan and execute two major federal events that focus on introducing KCM to all students and promote Short-Term Summer Missions.",
   },
   {
     name: "Janette Park",
     role: "Associate Missions Director",
     photo: img("janette-park.jpg"),
-    mission: "This committee exists to plan and oversee KCM's STSM program.",
+    mission: "Short-Term Summer Missions (STSM) exists to plan and oversee KCM's STSM program.",
   },
   {
     name: "Ryan Moon",
     role: "Sports",
     photo: img("ryan-moon.jpg"),
     mission:
-      "This committee exists to promote campus outreach through sports to create opportunities for cross-campus, Christ-centered fellowship.",
+      "Sports exists to promote campus outreach through sports to create opportunities for cross-campus, Christ-centered fellowship.",
   },
   {
     name: "Chris Kang",
     role: "Wintercon",
     photo: img("chris-kang.jpg"),
     mission:
-      "This committee exists to promote cross-campus fellowship through our annual Winter Conference and to encourage students to go on summer missions.",
+      "WinterCon exists to promote cross-campus fellowship through our annual Winter Conference and to encourage students to go on summer missions.",
   },
 ];
 

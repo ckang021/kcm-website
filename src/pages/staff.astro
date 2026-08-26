@@ -69,6 +69,7 @@ const levels = [
           {
             levels.map((lvl) => (
               <div class="org-col flex flex-col">
+                <span class="org-spine" aria-hidden="true"></span>
                 <div class="org-level">
                   <p class="font-display text-lg font-bold tracking-tight">{lvl.name}</p>
                   <p class="mt-1 text-sm text-white/60">{lvl.note}</p>
@@ -141,10 +142,7 @@ const levels = [
               <p class="mt-4 font-medium tracking-tight">{m.name}</p>
               <p class="text-sm text-ash">{m.role}</p>
               {m.mission && (
-                <p class="mt-2 text-sm leading-relaxed text-ash/90">
-                  <span class="font-medium text-ink">Mission — </span>
-                  {m.mission}
-                </p>
+                <p class="mt-2 text-sm leading-relaxed text-ash/90">{m.mission}</p>
               )}
             </div>
           ))
@@ -170,9 +168,20 @@ const levels = [
     .org-trunk {
       display: none;
     }
-    .org-level {
-      border-left: 2px solid var(--color-ink);
-      padding-left: 1rem;
+    /* Full-height accent line running down the left of each level column.
+       It sits in the gutter (1rem left of the content), so the white cards
+       keep their exact size — only the line is extended. */
+    .org-col {
+      position: relative;
+    }
+    .org-spine {
+      position: absolute;
+      left: -1rem;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      border-radius: 1px;
+      background: var(--color-ink);
     }
     /* Tree connectors only on the two-column (sm+) layout. Each column draws
        its own drop (at its true centre) plus a half-bar reaching to the page
@@ -229,8 +238,8 @@ const levels = [
     .fade-dark .org-trunk {
       background: rgba(255, 255, 255, 0.22);
     }
-    .fade-dark .org-level {
-      border-left-color: #ffffff;
+    .fade-dark .org-spine {
+      background: #ffffff;
     }
     /* cards stay white, so their text must stay dark (not inherit the
        section's white) */
