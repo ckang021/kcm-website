@@ -80,6 +80,7 @@ import { events, CATEGORIES } from "../data/events.ts";
     <div data-ev-panel class="relative w-full max-w-md rounded-2xl bg-paper p-7 shadow-2xl">
       <button data-ev-close aria-label="Close" class="absolute right-4 top-4 text-2xl leading-none text-ash hover:text-ink">&times;</button>
       <p data-ev-cat class="eyebrow"></p>
+      <img data-ev-logo src="" alt="" class="mt-3 hidden h-24 w-auto max-w-[75%] object-contain object-left" />
       <h3 data-ev-title class="mt-3 font-display text-2xl font-bold tracking-tight"></h3>
       <div class="mt-4 space-y-1.5 text-sm text-ink/80">
         <p data-ev-date class="font-medium"></p>
@@ -117,13 +118,15 @@ import { events, CATEGORIES } from "../data/events.ts";
   <script>
     type Ev = {
       title: string;
-      start: string;
+      start?: string;
       end?: string;
       time?: string;
       location?: string;
       category?: string;
       description?: string;
+      logo?: string;
       link?: string;
+      tbd?: boolean;
     };
 
     const payload = JSON.parse(document.getElementById("events-data")!.textContent || "{}");
@@ -142,6 +145,7 @@ import { events, CATEGORIES } from "../data/events.ts";
     // ---- map every calendar day -> events on that day (expand multi-day) ----
     const byDay = new Map<string, Ev[]>();
     for (const ev of events) {
+      if (!ev.start) continue; // date-not-set (TBD) events stay off the grid
       const s = parse(ev.start);
       const e = ev.end ? parse(ev.end) : s;
       for (let d = new Date(s); d <= e; d.setDate(d.getDate() + 1)) {
@@ -152,6 +156,7 @@ import { events, CATEGORIES } from "../data/events.ts";
     }
 
     const fmtRange = (ev: Ev) => {
+      if (!ev.start) return "Date to be announced";
       const s = parse(ev.start);
       const opts: Intl.DateTimeFormatOptions = { weekday: "long", month: "long", day: "numeric", year: "numeric" };
       if (!ev.end || ev.end === ev.start) return s.toLocaleDateString("en-US", opts);
@@ -171,6 +176,18 @@ import { events, CATEGORIES } from "../data/events.ts";
     };
     const openModal = (ev: Ev) => {
       set("[data-ev-cat]", categories[ev.category || ""] || "Event", false);
+      // Wordmark logo doubles as the title; keep the text title for a11y/fallback.
+      const logo = modal.querySelector<HTMLImageElement>("[data-ev-logo]")!;
+      const titleEl = modal.querySelector<HTMLElement>("[data-ev-title]")!;
+      if (ev.logo) {
+        logo.src = ev.logo;
+        logo.alt = ev.title;
+        logo.classList.remove("hidden");
+        titleEl.classList.add("sr-only");
+      } else {
+        logo.classList.add("hidden");
+        titleEl.classList.remove("sr-only");
+      }
       set("[data-ev-title]", ev.title, false);
       set("[data-ev-date]", fmtRange(ev), false);
       set("[data-ev-time]", ev.time ? `🕑 ${ev.time}` : "");
@@ -300,23 +317,29 @@ import { events, CATEGORIES } from "../data/events.ts";
     // ---- upcoming list ----
     const upcomingWrap = document.getElementById("upcoming-list")!;
     const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const upcoming = events
-      .filter((ev) => (ev.end ? parse(ev.end) : parse(ev.start)) >= startOfToday)
-      .sort((a, b) => parse(a.start).getTime() - parse(b.start).getTime());
+    // Dated events still ahead, soonest first…
+    const dated = events
+      .filter((ev) => ev.start && (ev.end ? parse(ev.end) : parse(ev.start!)) >= startOfToday)
+      .sort((a, b) => parse(a.start!).getTime() - parse(b.start!).getTime());
+    // …then date-not-set events at the end.
+    const tbd = events.filter((ev) => !ev.start && ev.tbd);
+    const upcoming = [...dated, ...tbd];
 
     if (!upcoming.length) {
       document.getElementById("upcoming-empty")!.classList.remove("hidden");
     } else {
       for (const ev of upcoming) {
-        const s = parse(ev.start);
+        const badge = ev.start
+          ? `<span class="text-[10px] font-medium uppercase leading-none">${parse(ev.start).toLocaleDateString("en-US", { month: "short" })}</span>
+             <span class="font-display text-xl font-bold leading-tight">${parse(ev.start).getDate()}</span>`
+          : `<span class="font-display text-sm font-bold leading-none tracking-wide">TBD</span>`;
         const card = document.createElement("button");
         card.type = "button";
         card.className =
           "flex w-full items-center gap-4 rounded-xl border border-line p-3 text-left transition-colors hover:border-ink";
         card.innerHTML = `
           <div class="grid h-14 w-14 shrink-0 flex-col place-items-center rounded-lg bg-ink text-paper">
-            <span class="text-[10px] font-medium uppercase leading-none">${s.toLocaleDateString("en-US", { month: "short" })}</span>
-            <span class="font-display text-xl font-bold leading-tight">${s.getDate()}</span>
+            ${badge}
           </div>
           <div class="min-w-0">
             <p class="truncate font-medium leading-tight tracking-tight">${ev.title}</p>
