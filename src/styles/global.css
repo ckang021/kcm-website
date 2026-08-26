@@ -88,40 +88,6 @@
   .cta-bubble { transition: none; }
 }
 
-/* Contained button hover: an ink circle expands from the button's centre
-   (staying inside the pill) and the label flips to white. Used where a
-   section-wide fill would cover a background image. */
-.btn-ink {
-  position: relative;
-  overflow: hidden;
-}
-.btn-ink > .btn-ink-fill {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-color: var(--color-ink);
-  clip-path: circle(0% at 50% 50%);
-  transition: clip-path 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.btn-ink:hover > .btn-ink-fill,
-.btn-ink:focus-visible > .btn-ink-fill {
-  clip-path: circle(75% at 50% 50%);
-}
-.btn-ink > .btn-ink-label {
-  position: relative;
-  z-index: 1;
-  transition: color 0.3s ease;
-}
-.btn-ink:hover > .btn-ink-label,
-.btn-ink:focus-visible > .btn-ink-label {
-  color: #fff;
-}
-@media (prefers-reduced-motion: reduce) {
-  .btn-ink > .btn-ink-fill {
-    transition: none;
-  }
-}
-
 /* Scroll-reveal animation (progressively enhanced via JS) */
 .reveal {
   opacity: 0;
