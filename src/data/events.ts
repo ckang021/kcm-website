@@ -58,10 +58,10 @@ export const events: KcmEvent[] = [
   },
   {
     title: "Fall Sports Festival",
-    tbd: true,
+    start: "2026-11-14",
     category: "sports",
     logo: "/images/events/fsf.png",
-    description: "Inter-campus games and community — KCM's fall sports gathering. Date to be announced.",
+    description: "Inter-campus games and community — KCM's fall sports gathering.",
   },
   {
     title: "WinterCon",
