@@ -189,9 +189,9 @@ import { events, CATEGORIES } from "../data/events.ts";
         titleEl.classList.remove("sr-only");
       }
       set("[data-ev-title]", ev.title, false);
-      set("[data-ev-date]", fmtRange(ev), false);
-      set("[data-ev-time]", ev.time ? `🕑 ${ev.time}` : "");
-      set("[data-ev-loc]", ev.location ? `📍 ${ev.location}` : "");
+      set("[data-ev-date]", `📅 ${fmtRange(ev)}`, false);
+      set("[data-ev-time]", `🕑 ${ev.time || "Time TBD"}`, false);
+      set("[data-ev-loc]", `📍 ${ev.location || "Location TBD"}`, false);
       set("[data-ev-desc]", ev.description || "");
       const link = modal.querySelector<HTMLAnchorElement>("[data-ev-link]")!;
       if (ev.link) { link.href = ev.link; link.classList.remove("hidden"); }

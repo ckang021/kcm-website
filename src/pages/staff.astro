@@ -183,6 +183,13 @@ const levels = [
       border-radius: 1px;
       background: var(--color-ink);
     }
+    /* Equalise the two level headers so all four cards come out the same size
+       (columns stay equal height, so the accent spines stay matched). */
+    @media (min-width: 640px) {
+      .org-level {
+        min-height: 4.5rem;
+      }
+    }
     /* Tree connectors only on the two-column (sm+) layout. Each column draws
        its own drop (at its true centre) plus a half-bar reaching to the page
        centre, so they meet regardless of the grid gap. */

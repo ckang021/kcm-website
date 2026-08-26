@@ -71,8 +71,14 @@ const gallery = [
 
   <!-- CAMPUSES STRIP -->
   <section class="relative overflow-hidden border-b border-line bg-ink py-20 text-paper">
-    <!-- ambient tint: blurred photo of the hovered campus washes into the background -->
-    <div id="campus-bg" class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700 ease-out">
+    <!-- ambient tint: blurred photo of the hovered campus washes into the background.
+         Masked so it fades to nothing at the top/bottom edges — keeps the seam with
+         the hero video seamless (no line appears where the sections meet). -->
+    <div
+      id="campus-bg"
+      class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700 ease-out"
+      style="-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 16%,#000 85%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 16%,#000 85%,transparent 100%)"
+    >
       <img id="campus-bg-img" src="" alt="" class="h-full w-full scale-125 object-cover" style="filter: blur(52px) brightness(0.42) saturate(1.25);" />
       <div class="absolute inset-0 bg-ink/55"></div>
     </div>
@@ -227,8 +233,15 @@ const gallery = [
   </section>
 
   <!-- MISSION STATEMENT -->
-  <section class="fade-dark">
-    <div class="mx-auto max-w-5xl px-5 py-24 text-center sm:px-8 sm:py-32">
+  <section class="fade-dark relative overflow-hidden">
+    <img
+      src="/images/home/heartbeat.jpg"
+      alt=""
+      class="absolute inset-0 h-full w-full object-cover"
+      loading="lazy"
+    />
+    <div class="absolute inset-0 bg-ink/80"></div>
+    <div class="relative z-10 mx-auto max-w-5xl px-5 py-24 text-center sm:px-8 sm:py-32">
       <p class="eyebrow reveal">Our heartbeat</p>
       <p class="reveal mt-8 font-display text-2xl font-medium leading-snug tracking-tight sm:text-4xl sm:leading-[1.25]">
         {site.description}

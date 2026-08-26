@@ -71,4 +71,32 @@ export const events: KcmEvent[] = [
     logo: "/images/events/wintercon.png",
     description: "KCM's flagship winter conference — three days of teaching, worship, and community.",
   },
+  {
+    title: "Kingdom Come",
+    tbd: true,
+    category: "gathering",
+    logo: "/images/events/kingdom-come.png",
+    description: "One of KCM's two major federal gatherings, introducing students to the ministry and the heart of the Kingdom. Date to be announced.",
+  },
+  {
+    title: "Spring Sports Festival",
+    tbd: true,
+    category: "sports",
+    logo: "/images/events/ssf.png",
+    description: "KCM's spring inter-campus sports gathering. Date to be announced.",
+  },
+  {
+    title: "PowderPuff",
+    tbd: true,
+    category: "sports",
+    logo: "/images/events/ppuff.png",
+    description: "An inter-campus flag-football tournament bringing the KCM family together. Date to be announced.",
+  },
+  {
+    title: "Short-Term Summer Missions",
+    tbd: true,
+    category: "missions",
+    logo: "/images/events/stsm.png",
+    description: "KCM's Short-Term Summer Missions — sending collegians to serve on the local and global mission field. Date to be announced.",
+  },
 ];
