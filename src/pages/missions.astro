@@ -55,37 +55,38 @@ import { missionsIntro, teams } from "../data/missions.ts";
   </section>
 
   <script type="application/json" id="teams-data" set:html={JSON.stringify(
-    teams.map((t) => ({ country: t.country, region: t.region, lat: t.lat, lng: t.lng }))
+    teams.map((t) => ({ country: t.country, region: t.region, lat: t.lat, lng: t.lng, cover: t.cover }))
   )} />
 
   <script>
     import L from "leaflet";
     import "leaflet/dist/leaflet.css";
 
-    type Team = { country: string; region: string; lat: number; lng: number };
+    type Team = {
+      country: string;
+      region: string;
+      lat: number;
+      lng: number;
+      cover: string;
+    };
     const teams: Team[] = JSON.parse(
       document.getElementById("teams-data")!.textContent || "[]"
     );
     const el = document.getElementById("missions-map");
 
     if (el && teams.length) {
+      // A generic, static world graphic — no tiles, no panning/zooming.
       const map = L.map(el, {
+        zoomControl: false,
+        attributionControl: false,
+        dragging: false,
         scrollWheelZoom: false,
-        zoomControl: true,
-        minZoom: 1,
+        doubleClickZoom: false,
+        boxZoom: false,
+        keyboard: false,
+        touchZoom: false,
       });
-      L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=cb1_29x1_1_bdcc69688035c65d5e8d34f0",
-        {
-          attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-          subdomains: "abcd",
-          maxZoom: 19,
-        }
-      ).addTo(map);
-
-      // Fallback view so the map is valid before the first real fit.
-      map.setView([18, 45], 2);
+      map.setView([16, 55], 2); // fallback until the first real fit
 
       const pin = L.divIcon({
         className: "kcm-mpin",
@@ -97,27 +98,51 @@ import { missionsIntro, teams } from "../data/missions.ts";
       const pts: [number, number][] = [];
       teams.forEach((t) => {
         if (t.lat == null || t.lng == null) return;
-        const m = L.marker([t.lat, t.lng], { icon: pin }).addTo(map);
+        const m = L.marker([t.lat, t.lng], { icon: pin, riseOnHover: true }).addTo(map);
+        // Pin carries the country name as a permanent label…
+        m.bindTooltip(t.country, {
+          permanent: true,
+          direction: "bottom",
+          offset: [0, 7],
+          className: "pin-label",
+        });
+        // …and reveals that team's photo on hover.
         m.bindPopup(
-          `<div class="kcm-mpopup"><strong>${t.country}</strong><span>${t.region}</span></div>`
+          `<figure class="team-card"><img src="${t.cover}" alt="${t.country}" /><figcaption>${t.country}</figcaption></figure>`,
+          { closeButton: false, autoPan: false, offset: [0, -4], className: "team-popup" }
         );
-        m.bindTooltip(t.country, { direction: "top", offset: [0, -8] });
+        m.on("mouseover", () => m.openPopup());
+        m.on("mouseout", () => m.closePopup());
         pts.push([t.lat, t.lng]);
       });
 
-      // Fit to all teams. The container can report 0 width on first paint
-      // (grid/flex + async layout), which makes fitBounds pick a too-close
-      // zoom — so refit whenever the box actually gets/changes a real width.
+      // Frame all teams. The box can report 0 width on first paint, which makes
+      // fitBounds pick a too-close zoom — so refit once it has a real width.
       const fit = () => {
-        // Only fit once the box has a real width — fitting at 0 width makes
-        // Leaflet pick a too-close (capped) zoom. Small horizontal padding so
-        // the near-global span (Central America → East Asia) still fits one
-        // world at a zoom where the basemap is wider than the viewport, which
-        // avoids the low-zoom wrap where a marker jumps to a duplicate copy.
         if (pts.length && el.clientWidth > 40) {
-          map.fitBounds(pts, { padding: [12, 34], maxZoom: 4 });
+          map.fitBounds(pts, { padding: [26, 46], maxZoom: 4 });
         }
       };
+
+      // Generic monochrome basemap drawn from local world GeoJSON (no keys).
+      fetch("/data/world.geojson")
+        .then((r) => r.json())
+        .then((geo) => {
+          L.geoJSON(geo, {
+            interactive: false,
+            style: {
+              color: "#3a3a42",
+              weight: 0.6,
+              fillColor: "#2a2a30",
+              fillOpacity: 1,
+            },
+          })
+            .addTo(map)
+            .bringToBack();
+          fit();
+        })
+        .catch(() => fit());
+
       fit();
       let lastW = 0;
       const remeasure = () => {
@@ -128,9 +153,7 @@ import { missionsIntro, teams } from "../data/missions.ts";
           fit();
         }
       };
-      if ("ResizeObserver" in window) {
-        new ResizeObserver(remeasure).observe(el);
-      }
+      if ("ResizeObserver" in window) new ResizeObserver(remeasure).observe(el);
       window.addEventListener("resize", remeasure);
       setTimeout(remeasure, 300);
     }
@@ -138,33 +161,73 @@ import { missionsIntro, teams } from "../data/missions.ts";
 
   <style is:global>
     #missions-map .leaflet-container {
-      background: #0f0f12;
+      background: #131316; /* "ocean" behind the land shapes */
       font-family: var(--font-sans, sans-serif);
+      cursor: default;
+    }
+    .kcm-mpin {
+      cursor: pointer;
     }
     .kcm-mpin span {
       display: block;
-      width: 12px;
-      height: 12px;
+      width: 13px;
+      height: 13px;
       border-radius: 9999px;
       background: #fff;
       border: 2px solid #0a0a0a;
-      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.16), 0 1px 6px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.14), 0 1px 6px rgba(0, 0, 0, 0.6);
+      transition: transform 0.15s ease;
     }
-    #missions-map .leaflet-popup-content-wrapper {
-      border-radius: 12px;
+    .kcm-mpin:hover span {
+      transform: scale(1.25);
     }
-    .kcm-mpopup {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
+
+    /* Permanent country label under each pin */
+    .leaflet-tooltip.pin-label {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95);
     }
-    .kcm-mpopup strong {
+    .leaflet-tooltip.pin-label::before {
+      display: none;
+    }
+
+    /* Hover card showing the team's photo */
+    .team-popup .leaflet-popup-content-wrapper {
+      padding: 0;
+      overflow: hidden;
+      border-radius: 14px;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.55);
+    }
+    .team-popup .leaflet-popup-content {
+      margin: 0;
+      width: 200px !important;
+    }
+    .team-popup .leaflet-popup-tip {
+      background: #fff;
+    }
+    .team-card {
+      margin: 0;
+    }
+    .team-card img {
+      display: block;
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+    }
+    .team-card figcaption {
+      padding: 9px 13px;
       font-family: var(--font-display, sans-serif);
-      font-size: 1rem;
-    }
-    .kcm-mpopup span {
-      color: #666;
-      font-size: 0.8rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #0a0a0a;
     }
   </style>
 
@@ -193,8 +256,8 @@ import { missionsIntro, teams } from "../data/missions.ts";
   <section class="cta-band relative overflow-hidden bg-ink py-20 text-center text-paper">
     <div class="cta-bubble" aria-hidden="true"></div>
     <div class="relative z-10 mx-auto max-w-xl px-5 sm:px-8">
-      <h2 class="font-display text-3xl font-bold tracking-tight sm:text-4xl">Support the sending.</h2>
-      <p class="mt-3 text-white/70">Partner with KCM to send collegians to the nations.</p>
+      <h2 class="font-display text-6xl font-bold tracking-tight text-white/10 sm:text-7xl">#send</h2>
+      <p class="mt-6 text-white/70">Partner with KCM to send collegians to the nations.</p>
       <a href="/give" class="mt-7 inline-block rounded-full bg-white px-6 py-3 text-sm font-medium text-ink transition-transform hover:-translate-y-0.5">
         Give to KCM
       </a>

@@ -19,15 +19,15 @@ export const about = {
   purpose: [
     {
       q: "What does this mean?",
-      a: "College students get the opportunity to participate in the local mission of God at their college campuses and partake further with their local church. Students also get to participate in the global mission of God by partaking in overseas missions and seeing the greater work of His Kingdom.",
+      a: "College students are invited to join God's mission both locally and globally—serving on their campuses, in their local churches, and among the nations.",
     },
     {
-      q: "How do we apply this vision?",
-      a: "KCM mobilizes by partnering with the local church to disciple and bring up college students to glorify God through missions with KCM or with their local church.",
+      q: "How do we live out this vision?",
+      a: "KCM partners with local churches to disciple and mobilize college students to glorify God through missions, whether through KCM or their own church.",
     },
     {
       q: "Why do we believe in missions?",
-      a: "KCM believes in missions because we aim to disciple them for the greater purpose of God's kingdom work at their local church and campus. We also support missionaries overseas by partnering with them in their ministries by obeying the Great Commission.",
+      a: "We believe missions is an essential part of faithful discipleship. We equip students to serve God's Kingdom on their campuses and in their churches while partnering with missionaries overseas to make disciples and live out the Great Commission.",
     },
   ],
 };

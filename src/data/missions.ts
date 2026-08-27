@@ -15,7 +15,7 @@ export const missionsIntro = {
   verse: "Go therefore and make disciples of all nations",
   reference: "Matthew 28:19",
   heading: "Our Missions Program",
-  body: "KCM aims to support and send collegians to various countries to partake in the Great Commission. Every year, KCM sends multiple teams to support missionaries and their ministries in varying locations within their respective countries.",
+  body: "Every year, KCM equips and sends collegians to various countries to support long-term missionaries with their local ministries. Collegians engage in cross-cultural ministry, serve local churches and schools, and partake in God's global redemptive work.",
   hashtag: "#go",
   season: "STSM 2026",
   hero: g("hike.jpg"),
