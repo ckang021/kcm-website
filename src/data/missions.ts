@@ -4,6 +4,9 @@ export interface MissionTeam {
   region: string;
   cover: string;
   gallery: string[];
+  /** Approximate location for the reach map (country/region centroid). */
+  lat: number;
+  lng: number;
 }
 
 const g = (f: string) => `/images/missions/${f}`;
@@ -26,6 +29,8 @@ export const teams: MissionTeam[] = [
     region: "Southeast Asia",
     cover: g("cambodia.jpg"),
     gallery: [],
+    lat: 12.5657,
+    lng: 104.991,
   },
   {
     slug: "south-india",
@@ -33,6 +38,8 @@ export const teams: MissionTeam[] = [
     region: "South Asia",
     cover: g("sindia.jpg"),
     gallery: [],
+    lat: 11.1271,
+    lng: 78.6569,
   },
   {
     slug: "philippines",
@@ -40,6 +47,8 @@ export const teams: MissionTeam[] = [
     region: "Southeast Asia",
     cover: g("philippines.jpg"),
     gallery: [],
+    lat: 12.8797,
+    lng: 121.774,
   },
   {
     slug: "north-india",
@@ -47,6 +56,8 @@ export const teams: MissionTeam[] = [
     region: "South Asia",
     cover: g("nindia.jpg"),
     gallery: [],
+    lat: 28.6139,
+    lng: 77.209,
   },
   {
     slug: "nicaragua",
@@ -54,6 +65,8 @@ export const teams: MissionTeam[] = [
     region: "Central America",
     cover: g("nicaragua.jpg"),
     gallery: [],
+    lat: 12.8654,
+    lng: -85.2072,
   },
   {
     slug: "taiwan",
@@ -61,5 +74,7 @@ export const teams: MissionTeam[] = [
     region: "East Asia",
     cover: g("taiwan.jpg"),
     gallery: [],
+    lat: 23.6978,
+    lng: 120.9605,
   },
 ];
