@@ -47,7 +47,7 @@ const isActive = (href: string) =>
       <a
         href="/give"
         data-give
-        class="rounded-full px-5 py-2 text-sm font-medium transition-transform hover:-translate-y-0.5"
+        class="rounded-full px-5 py-2 text-sm font-medium transition-all duration-300 hover:-translate-y-0.5"
       >
         Give
       </a>
@@ -164,6 +164,7 @@ const isActive = (href: string) =>
   [data-header] [data-nav-link][data-active="true"] { color: var(--color-ink); }
   [data-header] [data-nav-link]:hover { color: var(--color-ink); }
   [data-header] [data-give] { background: var(--color-ink); color: var(--color-paper); }
+  [data-header] [data-give]:hover { background: #2c2c2c; }
   [data-header] [data-burger] { color: var(--color-ink); }
 
   /* --- Dark top theme (over a dark hero): white until scrolled --- */
@@ -172,6 +173,7 @@ const isActive = (href: string) =>
   [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-nav-link][data-active="true"],
   [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-nav-link]:hover { color: #fff; }
   [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-give] { background: #fff; color: var(--color-ink); }
+  [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-give]:hover { background: #e5e5e5; }
   [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-burger] { color: #fff; }
 
   @media (prefers-reduced-motion: reduce) {

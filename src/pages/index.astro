@@ -59,7 +59,7 @@ const gallery = [
       </h1>
       <p class="mt-6 max-w-xl text-lg text-white/80">{site.mission}</p>
       <div class="mt-9 flex flex-wrap gap-3">
-        <a href="/about" class="rounded-full bg-white px-6 py-3 text-sm font-medium text-ink transition-transform hover:-translate-y-0.5">
+        <a href="/about" class="rounded-full bg-white px-6 py-3 text-sm font-medium text-ink transition-all duration-300 hover:-translate-y-0.5 hover:bg-neutral-200">
           About KCM
         </a>
         <a href="/campuses" class="rounded-full border border-white/40 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-white/10">
@@ -154,6 +154,16 @@ const gallery = [
     if (list && preview && previewImg && previewLabel && bg && bgImg && canHover) {
       const links = list.querySelectorAll<HTMLAnchorElement>("a[data-img]");
       let visible = false;
+
+      // Warm the cache up front so hovering shows the image instantly instead
+      // of fetching it on mouseenter (which lagged when skimming names fast).
+      links.forEach((a) => {
+        const src = a.dataset.img;
+        if (src) {
+          const img = new Image();
+          img.src = src;
+        }
+      });
 
       const place = (e: MouseEvent) => {
         const w = preview.offsetWidth;
