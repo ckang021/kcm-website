@@ -1,0 +1,10 @@
+{
+  // Cloudflare Workers config for KCM — a fully static Astro site.
+  // There is no server code: `assets.directory` points at the built
+  // output, so `npx wrangler deploy` uploads dist/ as a static site.
+  "name": "kcm-website",
+  "compatibility_date": "2026-08-26",
+  "assets": {
+    "directory": "./dist"
+  }
+}
