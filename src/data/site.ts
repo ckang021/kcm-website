@@ -5,7 +5,7 @@ export const site = {
   description:
     "KCM exists to care for collegians by discipling them to value the glory of God through local and global missions, ultimately to benefit and build up the local church of Jesus Christ.",
   mission:
-    "KCM exists to glorify God by mobilizing and discipling collegians to the local and global mission of God.",
+    "KCM exists to glorify God by mobilizing and discipling collegians to join his mission locally and globally.",
   social: {
     instagram: "https://www.instagram.com/kcm.network/",
     facebook: "https://www.facebook.com/thekcmnetwork",
