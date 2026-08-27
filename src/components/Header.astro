@@ -16,9 +16,13 @@ const isActive = (href: string) =>
 <header
   data-header
   data-top-theme={topTheme}
-  class="fixed inset-x-0 top-0 z-50 transition-all duration-300"
+  class="fixed inset-x-0 top-0 z-50"
 >
-  <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
+  <div class="mx-auto max-w-7xl px-3 pt-3 sm:px-5 sm:pt-4">
+   <div
+    data-glass
+    class="flex items-center justify-between rounded-2xl px-4 py-3 transition-[background-color,box-shadow] duration-300 sm:px-6"
+   >
     <a href="/" aria-label="Kristos Campus Missions — Home" data-logo class="shrink-0">
       <Logo class="h-8" link={false} />
     </a>
@@ -62,6 +66,7 @@ const isActive = (href: string) =>
         <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5" />
       </svg>
     </button>
+   </div>
   </div>
 </header>
 
@@ -122,7 +127,38 @@ const isActive = (href: string) =>
 </script>
 
 <style>
-  /* --- Default (light) top theme: dark ink on transparent --- */
+  /* ---------------------------------------------------------------
+     Liquid-glass nav — a floating, frosted capsule that refracts the
+     content behind it. The tint adapts to context: a cool, dark glass
+     over a dark hero (so the white mark reads), a bright paper glass
+     once scrolled onto light content. Palette vars drive both.
+     --------------------------------------------------------------- */
+  [data-header] {
+    --glass: color-mix(in srgb, var(--color-paper) 62%, transparent);
+    --edge: rgba(255, 255, 255, 0.55);
+    --halo: 0 12px 34px -14px rgba(10, 10, 10, 0.30);
+  }
+
+  [data-glass] {
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(20px) saturate(185%);
+    backdrop-filter: blur(20px) saturate(185%);
+    border: 1px solid color-mix(in srgb, var(--edge) 60%, transparent);
+    /* bright top rim + faint inner floor + soft outer halo = glass depth */
+    box-shadow:
+      inset 0 1px 0 var(--edge),
+      inset 0 -1px 1px rgba(255, 255, 255, 0.05),
+      var(--halo);
+  }
+
+  /* Over a dark hero (before scroll): dark, cool glass so white marks pop */
+  [data-header][data-top-theme="dark"]:not([data-scrolled]) {
+    --glass: rgba(14, 14, 18, 0.30);
+    --edge: rgba(255, 255, 255, 0.16);
+    --halo: 0 12px 34px -16px rgba(0, 0, 0, 0.55);
+  }
+
+  /* --- Mark / link colours --- */
   [data-header] [data-logo] { color: var(--color-ink); }
   [data-header] [data-nav-link] { color: var(--color-ash); }
   [data-header] [data-nav-link][data-active="true"] { color: var(--color-ink); }
@@ -132,21 +168,13 @@ const isActive = (href: string) =>
 
   /* --- Dark top theme (over a dark hero): white until scrolled --- */
   [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-logo] { color: #fff; }
-  [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-nav-link] { color: rgba(255,255,255,0.7); }
+  [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-nav-link] { color: rgba(255,255,255,0.72); }
   [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-nav-link][data-active="true"],
   [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-nav-link]:hover { color: #fff; }
   [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-give] { background: #fff; color: var(--color-ink); }
   [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-burger] { color: #fff; }
 
-  /* --- Scrolled: frosted paper bar ---
-     Uses a soft, dark-tinted shadow instead of a hard light border: it gives
-     subtle separation over light content but stays invisible over a dark hero,
-     so no bright line flashes when scrolling back to the top. */
-  [data-header][data-scrolled] {
-    background-color: color-mix(in srgb, var(--color-paper) 88%, transparent);
-    backdrop-filter: blur(12px);
-    box-shadow:
-      0 1px 0 rgba(10, 10, 10, 0.07),
-      0 12px 28px -18px rgba(10, 10, 10, 0.22);
+  @media (prefers-reduced-motion: reduce) {
+    [data-glass] { transition: none; }
   }
 </style>
