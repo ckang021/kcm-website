@@ -118,7 +118,7 @@ const levels = [
 
       <!-- Director, featured -->
       <div class="reveal group mt-12 grid gap-6 rounded-3xl border border-line bg-paper p-5 sm:grid-cols-[minmax(0,300px)_1fr] sm:items-center sm:gap-10 sm:p-8">
-        <div class="aspect-square overflow-hidden rounded-2xl bg-bone sm:aspect-[4/5]">
+        <div class="photo-frame aspect-square overflow-hidden rounded-2xl bg-bone sm:aspect-[4/5]">
           <img src={director.photo} alt={director.name} loading="lazy" class="team-photo h-full w-full object-cover" />
         </div>
         <div>
@@ -136,7 +136,7 @@ const levels = [
         {
           core.map((m) => (
             <div class="reveal group">
-              <div class="aspect-[4/5] overflow-hidden rounded-2xl bg-bone">
+              <div class="photo-frame aspect-[4/5] overflow-hidden rounded-2xl bg-bone">
                 <img src={m.photo} alt={m.name} loading="lazy" class="team-photo h-full w-full object-cover" />
               </div>
               <p class="mt-4 font-medium tracking-tight">{m.name}</p>
@@ -260,21 +260,20 @@ const levels = [
       }
     }
 
-    /* --- Team portraits: grayscale, color on hover --- */
-    .team-photo {
-      filter: grayscale(1) contrast(1.02);
-      transition: filter 0.5s ease, transform 0.5s ease;
+    /* --- Team portraits: full colour, gentle float on hover --- */
+    .photo-frame {
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
     }
-    .group:hover .team-photo {
-      filter: grayscale(0);
-      transform: scale(1.03);
+    .group:hover .photo-frame {
+      transform: translateY(-8px);
+      box-shadow: 0 22px 45px -14px rgba(0, 0, 0, 0.4);
     }
     @media (prefers-reduced-motion: reduce) {
-      .team-photo {
-        transition: filter 0.3s ease;
-      }
-      .group:hover .team-photo {
+      .photo-frame,
+      .group:hover .photo-frame {
         transform: none;
+        transition: box-shadow 0.3s ease;
       }
     }
   </style>
