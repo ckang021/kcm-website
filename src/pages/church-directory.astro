@@ -124,15 +124,14 @@ const total = all.length;
     );
 
     const map = L.map("map", { scrollWheelZoom: false, zoomControl: true });
-    L.tileLayer(
-      "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-      {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        subdomains: "abcd",
-        maxZoom: 19,
-      }
-    ).addTo(map);
+    // OpenStreetMap tiles (keyless); a CSS grayscale filter keeps the map
+    // monochrome to match the site. See the .leaflet-tile rule in the styles.
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      subdomains: "abc",
+      maxZoom: 19,
+    }).addTo(map);
 
     const pin = (active = false) =>
       L.divIcon({
@@ -252,6 +251,12 @@ const total = all.length;
   </script>
 
   <style is:global>
+    /* Desaturate + lighten the OpenStreetMap tiles into a soft monochrome
+       basemap (Positron-like) so the map matches the site. Markers/popups are
+       separate panes, so they keep their colour. */
+    .leaflet-tile {
+      filter: grayscale(1) contrast(0.9) brightness(1.06);
+    }
     .kcm-pin-dot {
       display: block;
       width: 14px;
