@@ -14,26 +14,28 @@ import { campuses } from "../data/campuses.ts";
     bleed="var(--color-paper)"
   />
 
-  <!-- Sticky campus tabs with scroll-spy indicator -->
-  <section data-tabs class="sticky top-[70px] z-30 border-b border-line bg-paper/95 backdrop-blur">
-    <div class="mx-auto max-w-7xl px-5 sm:px-8">
-      <div data-tabs-track class="relative flex gap-x-9 overflow-x-auto py-5">
-        {
-          campuses.map((c) => (
-            <a
-              href={`#${c.slug}`}
-              data-tab={c.slug}
-              class="whitespace-nowrap text-lg font-semibold tracking-tight text-ash transition-colors hover:text-ink"
-            >
-              {c.name}
-            </a>
-          ))
-        }
-        <!-- sliding underline -->
-        <span
-          data-tabs-indicator
-          class="pointer-events-none absolute bottom-0 left-0 h-[3px] w-0 rounded-full bg-ink opacity-0 transition-all duration-300 ease-out"
-        ></span>
+  <!-- Sticky campus tabs — floating liquid-glass capsule with a sliding pill -->
+  <section data-tabs class="sticky top-[84px] z-30">
+    <div class="mx-auto max-w-7xl px-4 py-3 sm:px-6">
+      <div data-tabs-glass class="w-fit max-w-full overflow-x-auto rounded-2xl">
+        <div data-tabs-track class="relative flex w-max gap-x-1 p-1.5">
+          {
+            campuses.map((c) => (
+              <a
+                href={`#${c.slug}`}
+                data-tab={c.slug}
+                class="relative z-10 whitespace-nowrap rounded-full px-4 py-2 text-base font-semibold tracking-tight text-ash transition-colors duration-300 hover:text-ink"
+              >
+                {c.name}
+              </a>
+            ))
+          }
+          <!-- sliding glass pill -->
+          <span
+            data-tabs-indicator
+            class="pointer-events-none absolute left-0 top-0 rounded-full bg-ink opacity-0"
+          ></span>
+        </div>
       </div>
     </div>
   </section>
@@ -77,7 +79,29 @@ import { campuses } from "../data/campuses.ts";
   }
 
   <style>
-    [data-tab][data-active="true"] { color: var(--color-ink); }
+    /* Floating liquid-glass capsule (cohesive with the main nav) */
+    [data-tabs-glass] {
+      background: color-mix(in srgb, var(--color-paper) 60%, transparent);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        0 10px 30px -14px rgba(10, 10, 10, 0.32);
+    }
+    /* Active tab text sits on the dark pill */
+    [data-tab][data-active="true"] { color: var(--color-paper); }
+    /* The pill glides sideways to the active tab */
+    [data-tabs-indicator] {
+      transition:
+        transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+        width 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+        height 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.3s ease;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      [data-tabs-indicator] { transition: opacity 0.3s ease; }
+    }
 
     /* Core portraits: full colour, gentle float on hover (cohesive with Staff) */
     .photo-frame {
@@ -106,7 +130,8 @@ import { campuses } from "../data/campuses.ts";
       const moveTo = (tab: HTMLAnchorElement) => {
         indicator.style.opacity = "1";
         indicator.style.width = `${tab.offsetWidth}px`;
-        indicator.style.transform = `translateX(${tab.offsetLeft}px)`;
+        indicator.style.height = `${tab.offsetHeight}px`;
+        indicator.style.transform = `translate(${tab.offsetLeft}px, ${tab.offsetTop}px)`;
       };
 
       const setActive = (slug: string) => {

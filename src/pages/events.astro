@@ -77,7 +77,7 @@ import { events, CATEGORIES } from "../data/events.ts";
 
   <!-- event detail modal -->
   <div data-ev-modal class="fixed inset-0 z-[60] hidden items-center justify-center bg-ink/70 p-5 backdrop-blur-sm">
-    <div data-ev-panel class="relative w-full max-w-md rounded-2xl bg-paper p-7 shadow-2xl">
+    <div data-ev-panel class="glass-panel relative w-full max-w-md rounded-2xl p-7">
       <button data-ev-close aria-label="Close" class="absolute right-4 top-4 text-2xl leading-none text-ash hover:text-ink">&times;</button>
       <p data-ev-cat class="eyebrow"></p>
       <img data-ev-logo src="" alt="" class="mt-3 hidden h-24 w-auto max-w-[75%] object-contain object-left" />
@@ -87,7 +87,6 @@ import { events, CATEGORIES } from "../data/events.ts";
         <p data-ev-time></p>
         <p data-ev-loc></p>
       </div>
-      <p data-ev-desc class="mt-4 leading-relaxed text-ash"></p>
       <a data-ev-link href="#" target="_blank" rel="noopener" class="mt-5 hidden rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-paper transition-transform hover:-translate-y-0.5">
         More info →
       </a>
@@ -190,9 +189,17 @@ import { events, CATEGORIES } from "../data/events.ts";
       }
       set("[data-ev-title]", ev.title, false);
       set("[data-ev-date]", `📅 ${fmtRange(ev)}`, false);
-      set("[data-ev-time]", `🕑 ${ev.time || "Time TBD"}`, false);
-      set("[data-ev-loc]", `📍 ${ev.location || "Location TBD"}`, false);
-      set("[data-ev-desc]", ev.description || "");
+      // Time line only shows when the event has a set time.
+      set("[data-ev-time]", ev.time ? `🕑 ${ev.time}` : "", true);
+      // Location links out to Google Maps when we have one.
+      const locEl = modal.querySelector<HTMLElement>("[data-ev-loc]")!;
+      if (ev.location) {
+        const maps = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ev.location)}`;
+        locEl.innerHTML = `📍 <a href="${maps}" target="_blank" rel="noopener" class="underline decoration-ink/30 underline-offset-2 transition-colors hover:decoration-ink">${ev.location}</a>`;
+      } else {
+        locEl.textContent = "📍 Location TBD";
+      }
+      locEl.classList.remove("hidden");
       const link = modal.querySelector<HTMLAnchorElement>("[data-ev-link]")!;
       if (ev.link) { link.href = ev.link; link.classList.remove("hidden"); }
       else link.classList.add("hidden");
@@ -349,14 +356,18 @@ import { events, CATEGORIES } from "../data/events.ts";
         card.type = "button";
         card.className =
           "flex w-full items-center gap-4 rounded-xl border border-line p-3 text-left transition-colors hover:border-ink";
+        const logoImg = ev.logo
+          ? `<img src="${ev.logo}" alt="${ev.title}" class="h-9 w-auto max-w-[38%] shrink-0 object-contain object-right" />`
+          : "";
         card.innerHTML = `
           <div class="grid h-14 w-14 shrink-0 flex-col place-items-center rounded-lg bg-ink text-paper">
             ${badge}
           </div>
-          <div class="min-w-0">
+          <div class="min-w-0 flex-1">
             <p class="truncate font-medium leading-tight tracking-tight">${ev.title}</p>
             <p class="mt-0.5 text-xs text-ash">${[categories[ev.category || ""] || "Event", ev.time, ev.location].filter(Boolean).join(" · ")}</p>
-          </div>`;
+          </div>
+          ${logoImg}`;
         card.addEventListener("click", () => openModal(ev));
         upcomingWrap.appendChild(card);
       }

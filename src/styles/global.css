@@ -110,3 +110,36 @@
     scroll-behavior: auto;
   }
 }
+
+/* ---------------------------------------------------------------
+   Liquid-glass surfaces — for elements that float over content
+   (modals, the mobile menu, hover cards). Cohesive with the nav.
+   --------------------------------------------------------------- */
+.glass-panel {
+  background: color-mix(in srgb, var(--color-paper) 84%, transparent);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 24px 60px -22px rgba(10, 10, 10, 0.5);
+}
+/* Full-bleed glass (edge-to-edge sheets like the mobile menu) — no border */
+.glass-sheet {
+  background: color-mix(in srgb, var(--color-paper) 85%, transparent);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+}
+/* Dark glass chip over imagery (e.g. the campus hover label) */
+.glass-chip {
+  background: rgba(10, 10, 12, 0.35);
+  -webkit-backdrop-filter: blur(10px) saturate(160%);
+  backdrop-filter: blur(10px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  /* Fallback for browsers without backdrop-filter: stay opaque + legible */
+  .glass-panel { background: var(--color-paper); }
+  .glass-sheet { background: var(--color-paper); }
+  .glass-chip { background: rgba(10, 10, 12, 0.72); }
+}

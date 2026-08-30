@@ -52,6 +52,8 @@ export const events: KcmEvent[] = [
   {
     title: "Gospel Renewal Night",
     start: "2026-10-17",
+    time: "5:00 PM",
+    location: "Church of Southland, Anaheim",
     category: "gathering",
     logo: "/images/events/grn.png",
     description: "A night of worship and gospel renewal, gathering the KCM family across campuses.",
@@ -67,6 +69,7 @@ export const events: KcmEvent[] = [
     title: "WinterCon",
     start: "2026-12-28",
     end: "2026-12-30",
+    location: "Camp Maranatha",
     category: "conference",
     logo: "/images/events/wintercon.png",
     description: "KCM's flagship winter conference — three days of teaching, worship, and community.",

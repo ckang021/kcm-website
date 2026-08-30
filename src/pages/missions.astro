@@ -32,7 +32,7 @@ import { missionsIntro, teams } from "../data/missions.ts";
         </div>
         <div>
           <p class="max-w-2xl text-lg leading-relaxed text-white/70">{missionsIntro.body}</p>
-          <p class="mt-8 font-display text-6xl font-bold tracking-tight text-white/10">{missionsIntro.hashtag}</p>
+          <p class="mt-8 font-display text-6xl font-bold tracking-tight text-white/30">{missionsIntro.hashtag}</p>
         </div>
       </div>
     </div>
@@ -95,15 +95,24 @@ import { missionsIntro, teams } from "../data/missions.ts";
         iconAnchor: [8, 8],
       });
 
+      // Spread the permanent labels by direction so the SE-Asia cluster
+      // (Cambodia / Philippines / Taiwan) doesn't overlap into one blob.
+      const labelDir = {
+        Cambodia: "left", Philippines: "right", Taiwan: "top",
+        "South India": "left", "North India": "top", Nicaragua: "bottom",
+      };
+      const labelOff = { top: [0, -6], bottom: [0, 6], left: [-8, 0], right: [8, 0] };
+
       const pts: [number, number][] = [];
       teams.forEach((t) => {
         if (t.lat == null || t.lng == null) return;
         const m = L.marker([t.lat, t.lng], { icon: pin, riseOnHover: true }).addTo(map);
         // Pin carries the country name as a permanent label…
+        const dir = labelDir[t.country] || "bottom";
         m.bindTooltip(t.country, {
           permanent: true,
-          direction: "bottom",
-          offset: [0, 7],
+          direction: dir,
+          offset: labelOff[dir],
           className: "pin-label",
         });
         // …and reveals that team's photo on hover.
@@ -131,9 +140,9 @@ import { missionsIntro, teams } from "../data/missions.ts";
           L.geoJSON(geo, {
             interactive: false,
             style: {
-              color: "#3a3a42",
+              color: "#45464f",
               weight: 0.6,
-              fillColor: "#2a2a30",
+              fillColor: "#2f3038",
               fillOpacity: 1,
             },
           })
@@ -160,8 +169,10 @@ import { missionsIntro, teams } from "../data/missions.ts";
   </script>
 
   <style is:global>
-    #missions-map .leaflet-container {
-      background: #131316; /* "ocean" behind the land shapes */
+    #missions-map {
+      background: #14141a; /* dark "ocean" behind the land shapes */
+    }
+    #missions-map.leaflet-container {
       font-family: var(--font-sans, sans-serif);
       cursor: default;
     }
@@ -188,12 +199,16 @@ import { missionsIntro, teams } from "../data/missions.ts";
       border: none;
       box-shadow: none;
       padding: 0;
-      color: rgba(255, 255, 255, 0.85);
-      font-size: 0.68rem;
+      color: #fff;
+      font-size: 0.72rem;
       font-weight: 600;
       letter-spacing: 0.02em;
       white-space: nowrap;
-      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95);
+      /* dark halo so the white label reads over land, borders, or ocean */
+      text-shadow:
+        0 0 3px rgba(0, 0, 0, 0.95),
+        0 0 6px rgba(0, 0, 0, 0.85),
+        0 1px 2px rgba(0, 0, 0, 0.95);
     }
     .leaflet-tooltip.pin-label::before {
       display: none;
@@ -232,13 +247,13 @@ import { missionsIntro, teams } from "../data/missions.ts";
   </style>
 
   <!-- Teams board -->
-  <section class="border-b border-line bg-ink py-24 text-paper sm:py-28">
+  <section class="border-b border-line bg-paper py-24 text-ink sm:py-28">
     <div class="mx-auto max-w-7xl px-5 sm:px-8">
-      <p class="eyebrow text-white/50">2026 STSM Teams</p>
+      <p class="eyebrow">2026 STSM Teams</p>
       <div class="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {
           teams.map((t) => (
-            <div class="group relative aspect-[3/2] overflow-hidden rounded-2xl">
+            <div class="group relative aspect-[3/2] overflow-hidden rounded-2xl shadow-md ring-1 ring-black/5">
               <img src={t.cover} alt={t.country} loading="lazy" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
               <div class="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/20 to-transparent"></div>
               <div class="absolute bottom-0 left-0 p-5">
@@ -253,12 +268,13 @@ import { missionsIntro, teams } from "../data/missions.ts";
   </section>
 
   <!-- Give CTA -->
-  <section class="cta-band relative overflow-hidden bg-ink py-20 text-center text-paper">
-    <div class="cta-bubble" aria-hidden="true"></div>
+  <section class="cta-band relative overflow-hidden bg-paper py-20 text-center text-ink">
+    <!-- soft light wash expands from the cursor on hover (retained from the dark version) -->
+    <div class="cta-bubble" aria-hidden="true" style="background-color:#efedea"></div>
     <div class="relative z-10 mx-auto max-w-xl px-5 sm:px-8">
-      <h2 class="font-display text-6xl font-bold tracking-tight text-white/10 sm:text-7xl">#send</h2>
-      <p class="mt-6 text-white/70">Partner with KCM to send collegians to the nations.</p>
-      <a href="/give" class="mt-7 inline-block rounded-full bg-white px-6 py-3 text-sm font-medium text-ink transition-all duration-300 hover:-translate-y-0.5 hover:bg-neutral-200">
+      <h2 class="font-display text-6xl font-bold tracking-tight text-black/20 sm:text-7xl">#send</h2>
+      <p class="mt-6 text-ink/60">Partner with KCM to send collegians to the nations.</p>
+      <a href="/give" class="mt-7 inline-block rounded-full bg-ink px-6 py-3 text-sm font-medium text-paper transition-all duration-300 hover:-translate-y-0.5 hover:bg-neutral-800">
         Give to KCM
       </a>
     </div>

@@ -73,8 +73,18 @@ const isActive = (href: string) =>
 <!-- Mobile menu overlay -->
 <div
   data-menu-panel
-  class="fixed inset-0 z-40 translate-x-full bg-paper transition-transform duration-300 ease-out lg:hidden"
+  class="glass-sheet fixed inset-0 z-[60] translate-x-full transition-transform duration-300 ease-out lg:hidden"
 >
+  <button
+    type="button"
+    data-menu-close
+    aria-label="Close menu"
+    class="absolute right-5 top-5 grid h-10 w-10 place-items-center text-ink"
+  >
+    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6 6 18" />
+    </svg>
+  </button>
   <div class="flex h-full flex-col px-6 pb-10 pt-24">
     <nav class="flex flex-col gap-1" aria-label="Mobile">
       {
@@ -114,16 +124,50 @@ const isActive = (href: string) =>
     document.body.style.overflow = open ? "hidden" : "";
   }
   toggle?.addEventListener("click", () => setMenu(!open));
+  document
+    .querySelector<HTMLButtonElement>("[data-menu-close]")
+    ?.addEventListener("click", () => setMenu(false));
   panel?.querySelectorAll("a").forEach((a) =>
     a.addEventListener("click", () => setMenu(false))
   );
 
+  // While scrolled, the nav wears its light "paper glass". Over a dark section
+  // (e.g. the Missions map) that light bar looks wrong — so sample the colour
+  // directly behind the nav and flip back to dark glass when it's dark.
+  let rafId = 0;
+  const evalOverDark = () => {
+    rafId = 0;
+    if (!header || !header.hasAttribute("data-scrolled")) {
+      header?.removeAttribute("data-over-dark");
+      return;
+    }
+    const cx = Math.round(window.innerWidth / 2);
+    // elementsFromPoint includes the ancestor sections at that point, so the
+    // first one with an opaque background is what the nav is sitting over.
+    const els = document.elementsFromPoint(cx, 34);
+    let lum = 255;
+    for (const el of els) {
+      if (header.contains(el)) continue;
+      const p = getComputedStyle(el).backgroundColor.match(/[\d.]+/g);
+      if (p && p.length >= 3 && (p[3] === undefined || parseFloat(p[3]) > 0.5)) {
+        lum = 0.299 * +p[0] + 0.587 * +p[1] + 0.114 * +p[2];
+        break;
+      }
+    }
+    header.toggleAttribute("data-over-dark", lum < 120);
+  };
+  const checkOverDark = () => {
+    if (!rafId) rafId = requestAnimationFrame(evalOverDark);
+  };
+
   const onScroll = () => {
     if (window.scrollY > 24) header?.setAttribute("data-scrolled", "true");
     else header?.removeAttribute("data-scrolled");
+    checkOverDark();
   };
   onScroll();
   window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", checkOverDark);
 </script>
 
 <style>
@@ -175,6 +219,22 @@ const isActive = (href: string) =>
   [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-give] { background: #fff; color: var(--color-ink); }
   [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-give]:hover { background: #e5e5e5; }
   [data-header][data-top-theme="dark"]:not([data-scrolled]) [data-burger] { color: #fff; }
+
+  /* --- Scrolled OVER a dark section: keep the dark glass + white marks.
+     Uses a heavier tint than the hero state so a busy backdrop (e.g. the
+     Missions map's borders/land) can't bleed through and muddy the links. --- */
+  [data-header][data-over-dark] {
+    --glass: rgba(16, 16, 20, 0.72);
+    --edge: rgba(255, 255, 255, 0.16);
+    --halo: 0 12px 34px -16px rgba(0, 0, 0, 0.55);
+  }
+  [data-header][data-over-dark] [data-logo] { color: #fff; }
+  [data-header][data-over-dark] [data-nav-link] { color: rgba(255, 255, 255, 0.85); }
+  [data-header][data-over-dark] [data-nav-link][data-active="true"],
+  [data-header][data-over-dark] [data-nav-link]:hover { color: #fff; }
+  [data-header][data-over-dark] [data-give] { background: #fff; color: var(--color-ink); }
+  [data-header][data-over-dark] [data-give]:hover { background: #e5e5e5; }
+  [data-header][data-over-dark] [data-burger] { color: #fff; }
 
   @media (prefers-reduced-motion: reduce) {
     [data-glass] { transition: none; }
