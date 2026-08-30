@@ -195,10 +195,10 @@ export const regions: Region[] = [
         lng: -117.9785547,
       },
       {
-        name: "Discipleship Community Church",
+        name: "Disciples Community Church",
         address: "17502 Daimler St., Irvine, CA 92614",
         times: "1PM",
-        url: "https://disciplecc.org/_chboard/bbs/board.php?bo_table=m2_7",
+        url: "https://www.ordinarydcc.org/",
         lat: 33.697129,
         lng: -117.8582837,
       },
