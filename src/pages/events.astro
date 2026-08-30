@@ -162,7 +162,10 @@ import { events, CATEGORIES } from "../data/events.ts";
       const e = parse(ev.end);
       const sameMonth = s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear();
       const sStr = s.toLocaleDateString("en-US", { month: "long", day: "numeric" });
-      const eStr = e.toLocaleDateString("en-US", sameMonth ? { day: "numeric", year: "numeric" } : { month: "long", day: "numeric", year: "numeric" });
+      // Same month → "December 28 – 30, 2026"; else full end date.
+      const eStr = sameMonth
+        ? `${e.getDate()}, ${e.getFullYear()}`
+        : e.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
       return `${sStr} – ${eStr}`;
     };
 
