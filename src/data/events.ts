@@ -12,7 +12,10 @@
 //    category    – one of the CATEGORIES keys below       (optional)
 //    description – a sentence or two about the event       (optional)
 //    logo        – path to the event's wordmark logo       (optional)
-//    link        – sign-up / info URL                      (optional)
+//    link        – sign-up / form URL                      (optional)
+//    feature     – wide graphic; showcases the event on the (optional)
+//                  home page until it passes. Its "link" becomes
+//                  the home page sign-up button.
 //    tbd         – true if the date isn't set yet          (optional)
 //
 //  * A dated event needs `start`. For a date-not-yet-set event, set
@@ -34,6 +37,7 @@ export interface KcmEvent {
   description?: string;
   logo?: string;
   link?: string;
+  feature?: string;
   tbd?: boolean;
 }
 
@@ -53,9 +57,11 @@ export const events: KcmEvent[] = [
     title: "Gospel Renewal Night",
     start: "2026-10-17",
     time: "5:00 PM",
-    location: "Cerritos Missions Church",
+    location: "Cerritos Mission Church",
     category: "gathering",
     logo: "/images/events/grn.png",
+    feature: "/images/events/grn-feature.jpg",
+    link: "https://forms.gle/SDXZf5UFWARmT9bF7",
     description: "A night of worship and gospel renewal, gathering the KCM family across campuses.",
   },
   {

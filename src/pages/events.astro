@@ -87,8 +87,8 @@ import { events, CATEGORIES } from "../data/events.ts";
         <p data-ev-time></p>
         <p data-ev-loc></p>
       </div>
-      <a data-ev-link href="#" target="_blank" rel="noopener" class="mt-5 hidden rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-paper transition-transform hover:-translate-y-0.5">
-        More info →
+      <a data-ev-link href="#" target="_blank" rel="noopener" class="mt-6 hidden rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-paper transition-transform hover:-translate-y-0.5">
+        Form link →
       </a>
     </div>
   </div>
@@ -204,8 +204,8 @@ import { events, CATEGORIES } from "../data/events.ts";
       }
       locEl.classList.remove("hidden");
       const link = modal.querySelector<HTMLAnchorElement>("[data-ev-link]")!;
-      if (ev.link) { link.href = ev.link; link.classList.remove("hidden"); }
-      else link.classList.add("hidden");
+      if (ev.link) { link.href = ev.link; link.classList.replace("hidden", "inline-block"); }
+      else link.classList.replace("inline-block", "hidden");
       modal.classList.remove("hidden");
       modal.classList.add("flex");
       document.body.style.overflow = "hidden";

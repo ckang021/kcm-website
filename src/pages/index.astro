@@ -4,6 +4,20 @@ import Logo from "../components/Logo.astro";
 import Socials from "../components/Socials.astro";
 import { site } from "../data/site.ts";
 import { campuses } from "../data/campuses.ts";
+import { events } from "../data/events.ts";
+
+// Showcase the next upcoming event that has a feature graphic (see events.ts).
+const today = new Date().toISOString().slice(0, 10);
+const featured = events
+  .filter((e) => e.feature && e.start && (e.end || e.start) >= today)
+  .sort((a, b) => a.start!.localeCompare(b.start!))[0];
+const fmtDate = (d: string) =>
+  new Date(`${d}T12:00:00`).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+const featuredWhen = featured
+  ? featured.end && featured.end !== featured.start
+    ? `${fmtDate(featured.start!)} – ${fmtDate(featured.end)}`
+    : fmtDate(featured.start!)
+  : "";
 
 // Real event photography (people + moments from KCM events), no promo graphics.
 const gallery = [
@@ -214,6 +228,83 @@ const gallery = [
       preview.addEventListener("transitionend", () => {
         if (!visible) preview.classList.add("hidden");
       });
+    }
+  </script>
+
+  <!-- FEATURED EVENT -->
+  {
+    featured && (
+      <section id="featured-event" data-end={featured.end || featured.start} class="border-b border-line bg-paper py-24 sm:py-28">
+        <div class="mx-auto grid max-w-7xl items-center gap-10 px-5 sm:px-8 lg:grid-cols-[1.4fr_1fr] lg:gap-14">
+          <a href="/events" class="reveal group block overflow-hidden rounded-2xl shadow-xl ring-1 ring-black/5">
+            <img
+              src={featured.feature}
+              alt={featured.title}
+              loading="lazy"
+              class="aspect-video w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+            />
+          </a>
+          <div class="reveal">
+            <p class="eyebrow">Upcoming event</p>
+            <h2 class="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">{featured.title}</h2>
+            <dl class="mt-6 space-y-3 border-y border-line py-5 text-sm">
+              <div class="flex gap-4">
+                <dt class="w-16 shrink-0 text-ash">Date</dt>
+                <dd class="font-medium">{featuredWhen}</dd>
+              </div>
+              {featured.time && (
+                <div class="flex gap-4">
+                  <dt class="w-16 shrink-0 text-ash">Time</dt>
+                  <dd class="font-medium">{featured.time}</dd>
+                </div>
+              )}
+              {featured.location && (
+                <div class="flex gap-4">
+                  <dt class="w-16 shrink-0 text-ash">Where</dt>
+                  <dd>
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(featured.location)}`}
+                      target="_blank"
+                      rel="noopener"
+                      class="font-medium underline decoration-line underline-offset-4 transition-colors hover:decoration-ink"
+                    >
+                      {featured.location}
+                    </a>
+                  </dd>
+                </div>
+              )}
+            </dl>
+            <div class="mt-7 flex flex-wrap items-center gap-3">
+              {featured.link ? (
+                <a
+                  href={featured.link}
+                  target="_blank"
+                  rel="noopener"
+                  class="rounded-full bg-ink px-6 py-3 text-sm font-medium text-paper transition-all duration-300 hover:-translate-y-0.5 hover:bg-neutral-800"
+                >
+                  Sign up
+                </a>
+              ) : (
+                <span class="rounded-full bg-bone px-6 py-3 text-sm font-medium text-ash">Sign-up form coming soon</span>
+              )}
+              <a href="/events" class="group inline-flex items-center gap-1.5 px-2 text-sm text-ash transition-colors hover:text-ink">
+                All events
+                <span class="transition-transform duration-300 group-hover:translate-x-1">→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+  <script>
+    // The site is static, so hide the showcase once the event has passed
+    // even if the site hasn't been rebuilt since.
+    const fe = document.getElementById("featured-event");
+    if (fe && fe.dataset.end) {
+      const now = new Date();
+      const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+      if (fe.dataset.end < today) fe.remove();
     }
   </script>
 
