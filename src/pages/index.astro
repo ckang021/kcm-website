@@ -84,7 +84,7 @@ const gallery = [
   </section>
 
   <!-- CAMPUSES STRIP -->
-  <section class="relative overflow-hidden border-b border-line bg-ink py-20 text-paper">
+  <section class:list={["relative overflow-hidden bg-ink py-20 text-paper", !featured && "border-b border-line"]}>
     <!-- ambient tint: blurred photo of the hovered campus washes into the background.
          Masked so it fades to nothing at the top/bottom edges — keeps the seam with
          the hero video seamless (no line appears where the sections meet). -->
@@ -234,69 +234,142 @@ const gallery = [
   <!-- FEATURED EVENT -->
   {
     featured && (
-      <section id="featured-event" data-end={featured.end || featured.start} class="border-b border-line bg-paper py-24 sm:py-28">
-        <div class="mx-auto grid max-w-7xl items-center gap-10 px-5 sm:px-8 lg:grid-cols-[1.4fr_1fr] lg:gap-14">
-          <a href="/events" class="reveal group block overflow-hidden rounded-2xl shadow-xl ring-1 ring-black/5">
-            <img
-              src={featured.feature}
-              alt={featured.title}
-              loading="lazy"
-              class="aspect-video w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-            />
-          </a>
-          <div class="reveal">
-            <p class="eyebrow">Upcoming event</p>
-            <h2 class="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">{featured.title}</h2>
-            <dl class="mt-6 space-y-3 border-y border-line py-5 text-sm">
-              <div class="flex gap-4">
-                <dt class="w-16 shrink-0 text-ash">Date</dt>
-                <dd class="font-medium">{featuredWhen}</dd>
-              </div>
-              {featured.time && (
+      <section id="featured-event" data-end={featured.end || featured.start} class="relative overflow-hidden bg-ink py-24 text-paper sm:py-28">
+        <!-- ambient: the event graphic, blurred into a soft backdrop for the glass.
+             Masked at the edges so it melts into the dark campuses strip above. -->
+        <div class="fe-ambient pointer-events-none absolute inset-0" aria-hidden="true">
+          <img src={featured.feature} alt="" loading="lazy" />
+        </div>
+        <div class="relative mx-auto max-w-7xl px-5 sm:px-8">
+          <div class="fe-glass reveal grid items-center gap-8 rounded-[28px] p-3 sm:p-4 lg:grid-cols-[1.4fr_1fr] lg:gap-12 lg:p-5">
+            <a href="/events" class="group block overflow-hidden rounded-[20px] shadow-2xl ring-1 ring-white/10">
+              <img
+                src={featured.feature}
+                alt={featured.title}
+                loading="lazy"
+                class="aspect-video w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+              />
+            </a>
+            <div class="px-3 pb-5 sm:px-4 lg:px-0 lg:pb-0 lg:pr-8">
+              <p class="eyebrow">Upcoming event</p>
+              <h2 class="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">{featured.title}</h2>
+              <dl class="mt-6 space-y-3 border-y border-white/15 py-5 text-sm">
                 <div class="flex gap-4">
-                  <dt class="w-16 shrink-0 text-ash">Time</dt>
-                  <dd class="font-medium">{featured.time}</dd>
+                  <dt class="w-16 shrink-0 text-white/50">Date</dt>
+                  <dd class="font-medium">{featuredWhen}</dd>
                 </div>
-              )}
-              {featured.location && (
-                <div class="flex gap-4">
-                  <dt class="w-16 shrink-0 text-ash">Where</dt>
-                  <dd>
-                    <a
-                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(featured.location)}`}
-                      target="_blank"
-                      rel="noopener"
-                      class="font-medium underline decoration-line underline-offset-4 transition-colors hover:decoration-ink"
-                    >
-                      {featured.location}
-                    </a>
-                  </dd>
-                </div>
-              )}
-            </dl>
-            <div class="mt-7 flex flex-wrap items-center gap-3">
-              {featured.link ? (
-                <a
-                  href={featured.link}
-                  target="_blank"
-                  rel="noopener"
-                  class="rounded-full bg-ink px-6 py-3 text-sm font-medium text-paper transition-all duration-300 hover:-translate-y-0.5 hover:bg-neutral-800"
-                >
-                  Sign up
+                {featured.time && (
+                  <div class="flex gap-4">
+                    <dt class="w-16 shrink-0 text-white/50">Time</dt>
+                    <dd class="font-medium">{featured.time}</dd>
+                  </div>
+                )}
+                {featured.location && (
+                  <div class="flex gap-4">
+                    <dt class="w-16 shrink-0 text-white/50">Where</dt>
+                    <dd>
+                      <a
+                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(featured.location)}`}
+                        target="_blank"
+                        rel="noopener"
+                        class="font-medium underline decoration-white/30 underline-offset-4 transition-colors hover:decoration-white"
+                      >
+                        {featured.location}
+                      </a>
+                    </dd>
+                  </div>
+                )}
+              </dl>
+              <div class="mt-7 flex flex-wrap items-center gap-3">
+                {featured.link ? (
+                  <a
+                    href={featured.link}
+                    target="_blank"
+                    rel="noopener"
+                    class="rounded-full bg-white px-6 py-3 text-sm font-medium text-ink transition-all duration-300 hover:-translate-y-0.5 hover:bg-neutral-200"
+                  >
+                    Sign up
+                  </a>
+                ) : (
+                  <span class="rounded-full bg-white/10 px-6 py-3 text-sm font-medium text-white/60">Sign-up form coming soon</span>
+                )}
+                <a href="/events" class="group inline-flex items-center gap-1.5 px-2 text-sm text-white/65 transition-colors hover:text-white">
+                  All events
+                  <span class="transition-transform duration-300 group-hover:translate-x-1">→</span>
                 </a>
-              ) : (
-                <span class="rounded-full bg-bone px-6 py-3 text-sm font-medium text-ash">Sign-up form coming soon</span>
-              )}
-              <a href="/events" class="group inline-flex items-center gap-1.5 px-2 text-sm text-ash transition-colors hover:text-ink">
-                All events
-                <span class="transition-transform duration-300 group-hover:translate-x-1">→</span>
-              </a>
+              </div>
             </div>
           </div>
         </div>
       </section>
     )
   }
+  <style>
+    .fe-ambient {
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 22%, #000 78%, transparent 100%);
+      mask-image: linear-gradient(to bottom, transparent 0, #000 22%, #000 78%, transparent 100%);
+    }
+    .fe-ambient img {
+      position: absolute;
+      inset: -12%;
+      width: 124%;
+      height: 124%;
+      object-fit: cover;
+      filter: blur(60px) saturate(1.4) brightness(1.05);
+      opacity: 0.9;
+      animation: fe-drift 22s ease-in-out infinite alternate;
+    }
+    @keyframes fe-drift {
+      from { transform: translate3d(-3%, -2%, 0) scale(1.05); }
+      to { transform: translate3d(3%, 2%, 0) scale(1.12); }
+    }
+
+    /* Liquid glass card: tinted translucent surface, bright rim, top sheen,
+       and a soft highlight that follows the pointer. */
+    .fe-glass {
+      position: relative;
+      isolation: isolate;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.16) 0%,
+        rgba(255, 255, 255, 0.05) 42%,
+        rgba(255, 255, 255, 0.1) 100%
+      );
+      -webkit-backdrop-filter: blur(28px) saturate(170%);
+      backdrop-filter: blur(28px) saturate(170%);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.4),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.08),
+        0 40px 90px -35px rgba(0, 0, 0, 0.85);
+    }
+    .fe-glass::before,
+    .fe-glass::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      z-index: -1;
+    }
+    .fe-glass::before {
+      background: radial-gradient(120% 70% at 12% -10%, rgba(255, 255, 255, 0.22), transparent 55%);
+    }
+    .fe-glass::after {
+      background: radial-gradient(420px circle at var(--mx, 70%) var(--my, 30%), rgba(255, 255, 255, 0.1), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .fe-glass:hover::after { opacity: 1; }
+    .fe-glass .eyebrow { color: rgba(255, 255, 255, 0.6); }
+
+    @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+      .fe-glass { background: rgba(28, 28, 31, 0.92); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .fe-ambient img { animation: none; }
+    }
+  </style>
   <script>
     // The site is static, so hide the showcase once the event has passed
     // even if the site hasn't been rebuilt since.
@@ -305,6 +378,15 @@ const gallery = [
       const now = new Date();
       const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
       if (fe.dataset.end < today) fe.remove();
+    }
+    // Pointer-following sheen on the glass card.
+    const glass = document.querySelector<HTMLElement>(".fe-glass");
+    if (glass && window.matchMedia("(hover: hover)").matches) {
+      glass.addEventListener("mousemove", (e) => {
+        const r = glass.getBoundingClientRect();
+        glass.style.setProperty("--mx", `${e.clientX - r.left}px`);
+        glass.style.setProperty("--my", `${e.clientY - r.top}px`);
+      });
     }
   </script>
 
