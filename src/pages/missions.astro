@@ -3,6 +3,10 @@ import Layout from "../layouts/Layout.astro";
 import { missionsIntro, teams } from "../data/missions.ts";
 import { students } from "../data/testimonies.ts";
 import StudentTile from "../components/StudentTile.astro";
+import CountryShape from "../components/CountryShape.astro";
+
+// Country outline to draw for each team (both India teams share India).
+const mapName = (slug: string, country: string) => (slug.endsWith("india") ? "India" : country);
 
 // Team members grouped by team (teams-board order); leaders first.
 const roleRank = { Leader: 0, "Co-leader": 1 } as const;
@@ -330,10 +334,21 @@ const testimonyGroups = teams
               hidden={i !== 0}
               class="glass-dark mt-5 rounded-[28px] p-4 sm:p-8"
             >
-              <p class="text-sm text-white/55">
-                {team.region} · {members.length} {members.length === 1 ? "member" : "members"}
-              </p>
-              <div class="mt-6 grid grid-cols-3 gap-x-3 gap-y-6 sm:grid-cols-4 sm:gap-x-4 sm:gap-y-8 lg:grid-cols-6">
+              <div class="flex items-center justify-between gap-6">
+                <div>
+                  <h3 class="font-display text-3xl font-bold tracking-tight sm:text-5xl">{team.country}</h3>
+                  <p class="mt-2 text-sm text-white/55">
+                    {team.region} · {members.filter((m) => !m.role).length} collegians
+                  </p>
+                </div>
+                <CountryShape
+                  country={mapName(team.slug, team.country)}
+                  lat={team.lat}
+                  lng={team.lng}
+                  class="-my-2 h-24 w-24 shrink-0 sm:h-36 sm:w-36 lg:-my-4 lg:h-44 lg:w-44"
+                />
+              </div>
+              <div class="mt-8 grid grid-cols-3 gap-x-3 gap-y-6 sm:grid-cols-4 sm:gap-x-4 sm:gap-y-8 lg:grid-cols-6">
                 {members.map((s) => <StudentTile student={s} />)}
               </div>
             </div>

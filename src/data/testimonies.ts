@@ -17,7 +17,7 @@
 //               testimony. Until it is added, a temporary stock photo shows.
 //
 //  Roster from the "TENTATIVE TEAMS" sheet (2026 tab), plus Daniel Kwak
-//  and Angeline Choi from the kcm-headshots folder. Photos: kcm-headshots.
+//  (Cambodia) and each team's Leader + Co-leader from the kcm-headshots folder. Photos: kcm-headshots.
 //  MOCKUP: no testimonies have been written yet, so student pages fall
 //  back to placeholder paragraphs until `body` is filled in.
 // ─────────────────────────────────────────────────────────────
@@ -54,10 +54,9 @@ export const placeholderBody = (country: string) => [
 ];
 
 export const students: Student[] = [
-  // Team leaders go anywhere in this list, e.g.
-  // { team: "cambodia", name: "Full Name", role: "Leader", photo: "/images/testimonies/cambodia/full-name.jpg" },
-
-  // ── Cambodia (12) ──
+  // ── Cambodia (12 + 2 leaders) ──
+  { team: "cambodia", name: "Brian Lee", role: "Leader", photo: "/images/testimonies/cambodia/brian-lee.jpg" },
+  { team: "cambodia", name: "Kambria Salido", role: "Co-leader", photo: "/images/testimonies/cambodia/kambria-salido.jpg" },
   { team: "cambodia", name: "Chloe Chang", school: "UCSD", year: 1, photo: "/images/testimonies/cambodia/chloe-chang.jpg" },
   { team: "cambodia", name: "Daniel Cha", school: "UCR", year: 4, photo: "/images/testimonies/cambodia/daniel-cha.jpg" },
   { team: "cambodia", name: "Daniel Kwak", school: "UCI", year: 1, photo: "/images/testimonies/cambodia/daniel-kwak.jpg" },
@@ -71,7 +70,9 @@ export const students: Student[] = [
   { team: "cambodia", name: "Serena Que", school: "UCLA", year: 1, photo: "/images/testimonies/cambodia/serena-que.jpg" },
   { team: "cambodia", name: "Stephen Kim", school: "UCR", year: 3, photo: "/images/testimonies/cambodia/stephen-kim.jpg" },
 
-  // ── South India (17) ──
+  // ── South India (17 + 2 leaders) ──
+  { team: "south-india", name: "Janette Park", role: "Leader", photo: "/images/testimonies/south-india/janette-park.jpg" },
+  { team: "south-india", name: "John Song", role: "Co-leader", photo: "/images/testimonies/south-india/john-song.jpg" },
   { team: "south-india", name: "Ashlee Shon", school: "UCLA", year: 2, photo: "/images/testimonies/south-india/ashlee-shon.jpg" },
   { team: "south-india", name: "Chloe Pyo", school: "UCI", year: 1, photo: "/images/testimonies/south-india/chloe-pyo.jpg" },
   { team: "south-india", name: "Elijah Kim", school: "Cal Poly Pomona", year: 4, photo: "/images/testimonies/south-india/elijah-kim.jpg" },
@@ -90,7 +91,9 @@ export const students: Student[] = [
   { team: "south-india", name: "Sean Cho", school: "UCI", year: 1, photo: "/images/testimonies/south-india/sean-cho.jpg" },
   { team: "south-india", name: "Timothy Joo", school: "UCSB", year: 4, photo: "/images/testimonies/south-india/timothy-joo.jpg" },
 
-  // ── Philippines (12) ──
+  // ── Philippines (12 + 2 leaders) ──
+  { team: "philippines", name: "Ryan Moon", role: "Leader", photo: "/images/testimonies/philippines/ryan-moon.jpg" },
+  { team: "philippines", name: "Jamie Choi", role: "Co-leader", photo: "/images/testimonies/philippines/jamie-choi.jpg" },
   { team: "philippines", name: "Abigail Shin", school: "USC", year: 1, photo: "/images/testimonies/philippines/abigail-shin.jpg" },
   { team: "philippines", name: "David Nam", school: "UCI", year: 3, photo: "/images/testimonies/philippines/david-nam.jpg" },
   { team: "philippines", name: "Elise Hong", school: "UCI", year: 3, photo: "/images/testimonies/philippines/elise-hong.jpg" },
@@ -104,7 +107,9 @@ export const students: Student[] = [
   { team: "philippines", name: "Sarah Choi", school: "UCSD", year: 2, photo: "/images/testimonies/philippines/sarah-choi.jpg" },
   { team: "philippines", name: "Summer Hahn", school: "Pepperdine", year: 4, photo: "/images/testimonies/philippines/summer-hahn.jpg" },
 
-  // ── North India (13) ──
+  // ── North India (13 + 2 leaders) ──
+  { team: "north-india", name: "Chris Kim", role: "Leader", photo: "/images/testimonies/north-india/chris-kim.jpg" },
+  { team: "north-india", name: "Sonia Lim", role: "Co-leader", photo: "/images/testimonies/north-india/sonia-lim.jpg" },
   { team: "north-india", name: "Ben Chan", school: "UCSB", year: 1, photo: "/images/testimonies/north-india/ben-chan.jpg" },
   { team: "north-india", name: "Caleb Kim", school: "UCLA", year: 4, photo: "/images/testimonies/north-india/caleb-kim.jpg" },
   { team: "north-india", name: "Daniel Park", school: "UCI", year: 3, photo: "/images/testimonies/north-india/daniel-park.jpg" },
@@ -119,9 +124,10 @@ export const students: Student[] = [
   { team: "north-india", name: "Sarah Lee", school: "UCR", year: 4, photo: "/images/testimonies/north-india/sarah-lee.jpg" },
   { team: "north-india", name: "Song Yi Baik", school: "UCLA", year: 4, photo: "/images/testimonies/north-india/song-yi-baik.jpg" },
 
-  // ── Nicaragua (18) ──
+  // ── Nicaragua (17 + 2 leaders) ──
+  { team: "nicaragua", name: "Anna Pellegrini", role: "Leader", photo: "/images/testimonies/nicaragua/anna-pellegrini.jpg" },
+  { team: "nicaragua", name: "Sam Ham", role: "Co-leader", photo: "/images/testimonies/nicaragua/sam-ham.jpg" },
   { team: "nicaragua", name: "Amber Khe", school: "UCSD", year: 2, photo: "/images/testimonies/nicaragua/amber-khe.jpg" },
-  { team: "nicaragua", name: "Angeline Choi", school: "UCLA", year: 3, photo: "/images/testimonies/nicaragua/angeline-choi.jpg" },
   { team: "nicaragua", name: "Ashley Kim", school: "UCLA", year: 2, photo: "/images/testimonies/nicaragua/ashley-kim.jpg" },
   { team: "nicaragua", name: "Dylan Lee", school: "UCI", year: 3, photo: "/images/testimonies/nicaragua/dylan-lee.jpg" },
   { team: "nicaragua", name: "Emily Oh", school: "UCI", year: 4, photo: "/images/testimonies/nicaragua/emily-oh.jpg" },
@@ -139,7 +145,9 @@ export const students: Student[] = [
   { team: "nicaragua", name: "Seth Lo", school: "Biola", year: 2, photo: "/images/testimonies/nicaragua/seth-lo.jpg" },
   { team: "nicaragua", name: "SuhJoon Ian Kang", school: "USC", year: 2, photo: "/images/testimonies/nicaragua/suhjoon-ian-kang.jpg" },
 
-  // ── Taiwan (12) ──
+  // ── Taiwan (12 + 2 leaders) ──
+  { team: "taiwan", name: "Andrew Yoo", role: "Leader", photo: "/images/testimonies/taiwan/andrew-yoo.jpg" },
+  { team: "taiwan", name: "Keren Choi", role: "Co-leader", photo: "/images/testimonies/taiwan/keren-choi.jpg" },
   { team: "taiwan", name: "Andrew Back", school: "UCSD", year: 1, photo: "/images/testimonies/taiwan/andrew-back.jpg" },
   { team: "taiwan", name: "Caleb Su", school: "Biola", year: 4, photo: "/images/testimonies/taiwan/caleb-su.jpg" },
   { team: "taiwan", name: "Esther Yang", school: "UCLA", year: 4, photo: "/images/testimonies/taiwan/esther-yang.jpg" },
