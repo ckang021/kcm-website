@@ -9,6 +9,8 @@ interface Props {
   minH?: string;
   /** CSS color the image bleeds into at the bottom (should match the next section's bg) */
   bleed?: string;
+  /** darker readability overlay, for bright photos */
+  strongShade?: boolean;
 }
 const {
   image,
@@ -18,6 +20,7 @@ const {
   intro,
   minH = "min-h-[70vh]",
   bleed = "var(--color-fade)",
+  strongShade = false,
 } = Astro.props;
 ---
 
@@ -30,7 +33,13 @@ const {
   />
 
   <!-- readability overlay -->
-  <div class="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/35 to-ink/15"></div>
+  <div
+    class:list={[
+      "absolute inset-0 bg-gradient-to-t",
+      strongShade ? "from-ink/90 via-ink/60 to-ink/35" : "from-ink/80 via-ink/35 to-ink/15",
+    ]}
+  >
+  </div>
 
   <!-- soft seam: image settles into the page below at the very bottom edge -->
   <div
