@@ -33,6 +33,7 @@ export interface KcmEvent {
   end?: string;
   time?: string;
   location?: string;
+  address?: string;
   category?: keyof typeof CATEGORIES;
   description?: string;
   logo?: string;
@@ -67,8 +68,12 @@ export const events: KcmEvent[] = [
   {
     title: "Fall Sports Festival",
     start: "2026-11-14",
+    time: "7:30 AM",
+    location: "Griffith’s Middle School",
+    address: "9633 Tweedy Ln, Downey, CA 90240",
     category: "sports",
     logo: "/images/events/fsf.png",
+    feature: "/images/events/fsf-2026-feature.png",
     description: "Inter-campus games and community — KCM's fall sports gathering.",
   },
   {

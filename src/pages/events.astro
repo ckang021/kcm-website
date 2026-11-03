@@ -121,6 +121,7 @@ import { events, CATEGORIES } from "../data/events.ts";
       end?: string;
       time?: string;
       location?: string;
+      address?: string;
       category?: string;
       description?: string;
       logo?: string;
@@ -197,7 +198,7 @@ import { events, CATEGORIES } from "../data/events.ts";
       // Location links out to Google Maps when we have one.
       const locEl = modal.querySelector<HTMLElement>("[data-ev-loc]")!;
       if (ev.location) {
-        const maps = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ev.location)}`;
+        const maps = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent([ev.location, ev.address].filter(Boolean).join(", "))}`;
         locEl.innerHTML = `📍 <a href="${maps}" target="_blank" rel="noopener" class="underline decoration-ink/30 underline-offset-2 transition-colors hover:decoration-ink">${ev.location}</a>`;
       } else {
         locEl.textContent = "📍 Location TBD";

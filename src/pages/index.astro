@@ -269,7 +269,7 @@ const gallery = [
                     <dt class="w-16 shrink-0 text-white/50">Where</dt>
                     <dd>
                       <a
-                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(featured.location)}`}
+                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent([featured.location, featured.address].filter(Boolean).join(", "))}`}
                         target="_blank"
                         rel="noopener"
                         class="font-medium underline decoration-white/30 underline-offset-4 transition-colors hover:decoration-white"
@@ -290,9 +290,16 @@ const gallery = [
                   >
                     Sign up
                   </a>
-                ) : (
-                  <span class="rounded-full bg-white/10 px-6 py-3 text-sm font-medium text-white/60">Sign-up form coming soon</span>
-                )}
+                ) : featured.location ? (
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent([featured.location, featured.address].filter(Boolean).join(", "))}`}
+                    target="_blank"
+                    rel="noopener"
+                    class="rounded-full bg-white px-6 py-3 text-sm font-medium text-ink transition-all duration-300 hover:-translate-y-0.5 hover:bg-neutral-200"
+                  >
+                    Get directions <span aria-hidden="true">↗</span>
+                  </a>
+                ) : null}
                 <a href="/events" class="group inline-flex items-center gap-1.5 px-2 text-sm text-white/65 transition-colors hover:text-white">
                   All events
                   <span class="transition-transform duration-300 group-hover:translate-x-1">→</span>
